@@ -48,7 +48,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
                             <!-- <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium">Email</label>
                             <input pInputText id="email1" type="text" placeholder="Email address" type="email" class="w-full md:w-[30rem] mb-5" [(ngModel)]="email" /> -->
                             <p-floatlabel variant="on" class="mb-5">
-                                <input pInputText id="email1" type="email" [fluid]="true" [(ngModel)]="email" />
+                                <input  pInputText id="email1" type="email" [fluid]="true" [(ngModel)]="email" />
                                 <label for="email1">Email</label>
                             </p-floatlabel>
                             <!-- <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl">Password</label>
