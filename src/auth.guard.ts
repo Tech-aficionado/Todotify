@@ -7,8 +7,8 @@ export const AuthenticationGaurds: CanActivateFn = (route: any, state: any) => {
   const router = inject(Router)
   // const token = localStorage.getItem('Access_token') ?? false;
   // if (token == false) {
-    router.navigate(['auth/access']);
+    // router.navigate(['auth/access']);
   //   return false;
   // }
-  return false;
+  return true;
 };

@@ -1,4 +1,3 @@
-import { ColorPickerModule } from 'primeng/colorpicker';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -11,12 +10,12 @@ import { AppConfigurator } from '../../layout/component/app.configurator';
 import { AppTopbar } from '../../layout/component/app.topbar';
 
 @Component({
-    selector: 'app-login',
+    selector: 'app-register',
     standalone: true,
     imports: [ButtonModule,AppTopbar, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
     template: `
+        <app-configurator />
         <app-topbar></app-topbar>
-        <app-configurator   />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -39,8 +38,8 @@ import { AppTopbar } from '../../layout/component/app.topbar';
                                     />
                                 </g>
                             </svg>
-                            <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back</div>
-                            <span class="text-muted-color font-medium">Sign in to continue</span>
+                            <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Todotify!</div>
+                            <span class="text-muted-color font-medium">Getting Started...</span>
                         </div>
 
                         <div>
@@ -65,7 +64,7 @@ import { AppTopbar } from '../../layout/component/app.topbar';
         </div>
     `
 })
-export class Login {
+export class Register {
     constructor(public router: Router){}
     email: string = '';
 
