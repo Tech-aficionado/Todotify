@@ -7,7 +7,7 @@ import { AppTopbar } from '../../layout/component/app.topbar';
 
 @Component({
     selector: 'app-error',
-    imports: [ButtonModule, AppTopbar,RippleModule, RouterModule, AppFloatingConfigurator, ButtonModule],
+    imports: [ButtonModule, AppTopbar, RippleModule, RouterModule, AppFloatingConfigurator, ButtonModule],
     standalone: true,
     template: ` <app-floating-configurator />
         <app-topbar></app-topbar>

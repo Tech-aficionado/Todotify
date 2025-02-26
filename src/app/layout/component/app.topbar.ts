@@ -72,11 +72,11 @@ import { LayoutService } from '../service/layout.service';
                         <i class="pi pi-linkedin"></i>
                         <span>LinkedIn</span>
                     </button>
-                    <button type="button"  class="layout-topbar-action">
+                    <button type="button" class="layout-topbar-action">
                         <i class="pi pi-bolt"></i>
                         <span>Projects</span>
                     </button>
-                    <button type="button"  class="layout-topbar-action">
+                    <button type="button" class="layout-topbar-action">
                         <i class="pi pi-user"></i>
                         <span>Logout</span>
                     </button>

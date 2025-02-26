@@ -16,7 +16,7 @@ import { AppConfigurator } from '../../layout/component/app.configurator';
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [RouterModule,AppConfigurator, TopbarWidget, HeroWidget, FeaturesWidget, HighlightsWidget, PricingWidget, FooterWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
+    imports: [RouterModule, AppConfigurator, TopbarWidget, HeroWidget, FeaturesWidget, FooterWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
     template: `
         <app-configurator />
         <div class="bg-surface-0 dark:bg-surface-900">

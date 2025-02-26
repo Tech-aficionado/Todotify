@@ -8,15 +8,14 @@ import { Crud } from '../crud/crud';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [StatsWidget, RecentSalesWidget,Crud],
+    imports: [StatsWidget, Crud],
     template: `
         <div class="grid grid-cols-12 gap-8">
             <app-stats-widget class="contents" />
-               
         </div>
         <div class="pt-4">
-        <app-crud></app-crud>
-</div>
+            <app-crud></app-crud>
+        </div>
     `
 })
 export class Dashboard {}

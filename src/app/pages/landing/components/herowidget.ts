@@ -5,7 +5,7 @@ import { RippleModule } from 'primeng/ripple';
 
 @Component({
     selector: 'hero-widget',
-    imports: [ButtonModule, RippleModule,RouterModule],
+    imports: [ButtonModule, RippleModule, RouterModule],
     template: `
         <div
             id="hero"

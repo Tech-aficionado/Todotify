@@ -49,8 +49,6 @@ import { CommonModule } from '@angular/common';
                 </div>
             </div>
 
-            
-
             <div
                 class="col-span-12 mt-20 mb-20 p-2 md:p-20"
                 style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)"
@@ -61,7 +59,7 @@ import { CommonModule } from '@angular/common';
                     <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
                         “Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”
                     </p>
-                    <img src="https://www.pngall.com/wp-content/uploads/13/Github-Logo.png" href="https://github.com/Tech-aficionado" class="mt-6" style='height:30px' alt="Company logo" />
+                    <img src="https://www.pngall.com/wp-content/uploads/13/Github-Logo.png" href="https://github.com/Tech-aficionado" class="mt-6" style="height:30px" alt="Company logo" />
                 </div>
             </div>
         </div>

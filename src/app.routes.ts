@@ -10,9 +10,7 @@ export const appRoutes: Routes = [
     {
         path: 'dashboard',
         component: AppLayout,
-        children: [
-            { path: '', component: Dashboard ,canActivate: [AuthenticationGaurds]}
-        ]
+        children: [{ path: '', component: Dashboard, canActivate: [AuthenticationGaurds] }]
     },
     { path: '', component: Landing },
     { path: 'notfound', component: Notfound },
