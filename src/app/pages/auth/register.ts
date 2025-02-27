@@ -9,20 +9,22 @@ import { RippleModule } from 'primeng/ripple';
 import { AppConfigurator } from '../../layout/component/app.configurator';
 import { AppTopbar } from '../../layout/component/app.topbar';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { BackendService } from '../service/backend.service';
 
 @Component({
     selector: 'app-register',
     standalone: true,
+    providers:[BackendService],
     imports: [ButtonModule, AppTopbar, FloatLabelModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
     template: `
-        <app-configurator />
         <app-topbar></app-topbar>
+        <app-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%) ">
                     <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                         <div class="text-center mb-8">
-                            <svg routerLink="" viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto">
+                            <!-- <svg routerLink="" viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto">
                                 <path
                                     fill-rule="evenodd"
                                     clip-rule="evenodd"
@@ -38,7 +40,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
                                         fill="var(--primary-color)"
                                     />
                                 </g>
-                            </svg>
+                            </svg> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto" width="32" height="32" viewBox="0 0 42 42"><path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z"/><path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z"/></svg>
                             <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Todotify!</div>
                             <span class="text-muted-color font-medium">Getting Started...</span>
                         </div>
@@ -47,14 +50,14 @@ import { FloatLabelModule } from 'primeng/floatlabel';
                             <!-- <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl">FullName</label>
                         <input pInputText id="fullname" type="text" placeholder="Fullname" class="w-full md:w-[30rem] mb-2" [(ngModel)]="fullname" /> -->
                             <p-floatlabel variant="on" class="mb-5">
-                                <input pInputText id="fullname" type="text" [fluid]="true" [(ngModel)]="fullname" />
+                                <input pInputText id="fullname" type="text" class="w-full md:w-[30rem]" [(ngModel)]="fullname" />
                                 <label for="fullname">FullName</label>
                             </p-floatlabel>
 
                             <!-- <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium">Email</label>
                             <input pInputText id="email1" type="text" placeholder="Email address" type="email" class="w-full md:w-[30rem] mb-5" [(ngModel)]="email" /> -->
                             <p-floatlabel variant="on" class="mb-5">
-                                <input pInputText id="email1" type="email" [fluid]="true" [(ngModel)]="email" />
+                                <input pInputText id="email1" type="email" class="w-full md:w-[30rem]" [(ngModel)]="email" />
                                 <label for="email1">Email</label>
                             </p-floatlabel>
                             <!-- <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl">Password</label>
@@ -64,7 +67,10 @@ import { FloatLabelModule } from 'primeng/floatlabel';
                                 <label for="on_label">Password</label>
                             </p-floatlabel>
 
-                            <p-button label="Sign In" styleClass="w-full mt-4" (click)="submit()"></p-button>
+                            <p-button label="Register" styleClass="w-full mt-4" (click)="submit()"></p-button>
+                            <div class="flex items-center justify-between mt-8 mb-8 gap-8">
+                                <span routerLink="/auth/login" class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Already A User?</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,7 +79,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     `
 })
 export class Register {
-    constructor(public router: Router) {}
+    constructor(public router: Router,public backend: BackendService) {}
     email: string = '';
 
     password: string = '';
@@ -82,5 +88,15 @@ export class Register {
     checked: boolean = false;
     submit() {
         console.log(this.fullname, this.email, this.password);
+        const user = {
+            fullname: this.fullname,
+            email: this.email,
+            password: this.password
+        }
+        this.backend.createUser(user).subscribe({
+            next:(value)=> {
+                console.log(value)
+            },
+        })
     }
 }

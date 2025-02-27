@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
     selector: 'topbar-widget',
     imports: [RouterModule, StyleClassModule, ButtonModule, RippleModule],
     template: `<a class="flex items-center" href="#">
-            <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2">
+            <!-- <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2">
                 <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -24,7 +24,8 @@ import { ButtonModule } from 'primeng/button';
                         fill="var(--primary-color)"
                     />
                 </g>
-            </svg>
+            </svg> -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2" width="32" height="32" viewBox="0 0 48 48"><path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z"/><path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z"/></svg>
             <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">TODOTIFY</span>
         </a>
 

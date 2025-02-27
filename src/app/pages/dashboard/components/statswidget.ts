@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -5,8 +6,9 @@ import { CommonModule } from '@angular/common';
     standalone: true,
     selector: 'app-stats-widget',
     imports: [CommonModule],
-    template: `<div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0">
+    template: `
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3 " >
+            <div class="card mb-0 "style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Total Todos</span>
@@ -19,7 +21,7 @@ import { CommonModule } from '@angular/common';
             </div>
         </div>
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0">
+            <div class="card mb-0"style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Completed Todos</span>
@@ -32,7 +34,7 @@ import { CommonModule } from '@angular/common';
             </div>
         </div>
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0">
+            <div class="card mb-0"style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Pending Todos</span>
@@ -45,7 +47,7 @@ import { CommonModule } from '@angular/common';
             </div>
         </div>
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0">
+            <div class="card mb-0"style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Missed Todos</span>
