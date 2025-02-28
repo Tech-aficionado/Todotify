@@ -11,15 +11,39 @@ import { AppConfigurator } from '../../layout/component/app.configurator';
 import { AppTopbar } from '../../layout/component/app.topbar';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { BackendService } from '../service/backend.service';
+import { DialogModule } from 'primeng/dialog';
+import { MessageModule } from 'primeng/message';
+import { InputOtpModule } from 'primeng/inputotp';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    providers:[BackendService],
-    imports: [ButtonModule, AppTopbar, FloatLabelModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
+    providers:[BackendService,MessageService],
+    imports: [ButtonModule,InputOtpModule,DialogModule,ToastModule,MessageModule, AppTopbar, FloatLabelModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
     template: `
+    <p-toast />
         <app-topbar></app-topbar>
         <app-configurator />
+        <p-dialog header="Verify your account" [(visible)]="display" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '30vw' }"  [modal]="true">
+                   <div class="flex justify-center items-center gap-4 mb-4">
+                   <p class="leading-normal m-0">
+                        Enter OTP to verify your account
+                    </p>
+                   </div>
+                   <div  class="flex justify-center items-center gap-4 mb-4">
+                    
+                   <p-message severity="info" >Check your Inbox</p-message>
+                   </div>
+                   <div class="flex justify-center items-center gap-4 mb-4">
+                   <p-inputotp [(ngModel)]="otpValue" [integerOnly]="true" />
+                   </div>
+                   
+                   <ng-template #footer>
+                        <p-button [loading]="loading" label="Verify" (click)="verifyToken()" />
+                    </ng-template>
+                </p-dialog>
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -60,7 +84,7 @@ import { BackendService } from '../service/backend.service';
                                 <p-password id="password1" [(ngModel)]="password" [toggleMask]="true" [fluid]="true" [feedback]="false" />
                                 <label for="on_label">Password</label>
                             </p-floatlabel>
-                            <p-button label="Sign In" styleClass="w-full" (click)="submit()"></p-button>
+                            <p-button [loading]="loading" label="Sign In" styleClass="w-full" (click)="submit()"></p-button>
                             <div class="flex items-center justify-between mt-8 mb-8 gap-8">
                                 <span routerLink="/auth/register" class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">New To Todotify?</span>
                             </div>
@@ -72,19 +96,91 @@ import { BackendService } from '../service/backend.service';
     `
 })
 export class Login {
-    constructor(public router: Router,public backend: BackendService) {}
-    email: string = '';
+    constructor(public router: Router,public backend: BackendService,private messageService: MessageService) {}
+    email: string = 'agsgxharmony@gmail.com';
 
-    password: string = '';
+    password: string = '123456';
 
     checked: boolean = false;
+    display: boolean = false;
+    loading: boolean = false
+    otpValue!:number 
     submit(){
-        console.log(`Email: ${this.email},Password: ${this.password}`)
-        this.backend.getUsers().subscribe({
-            next:(value)=> {
-                console.log(value)
+
+        const user = {
+            email: this.email,
+            password: this.password
+        }
+
+        this.backend.login(user).subscribe({
+            next:(value: any)=> {
+                console.log(value['status_code'])
+                this.authenticator(value)
+            },
+        })
+        this.loading = true
+        
+    }
+
+    verifyToken() {
+        this.loading  = true
+        this.backend.validateOTPAuth(this.email,this.otpValue).subscribe({
+            next:(res:any)=> {
+                if (res){
+                    if(res['status_code'] == 404){
+                        this.loading = false
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Invalid Otp'
+                        })
+                    }else if(res['status_code'] == 200){
+                        this.loading = false
+                        this.display = false
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Thanks for registration!!'
+                        })
+                        localStorage.setItem("access_token",res['token'])
+                        this.router.navigate(['dashboard'])
+                    }else if(res['status_code'] == 300){
+                        this.loading = false
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Expired Otp'
+                        })
+                    }
+                }else{
+                    console.error(res)
+                    this.loading = false
+                }
             },
         })
     }
+
+    authenticator(res:any){
+        if (res){
+            if(res['status_code'] == 404){
+                this.loading = false
+                this.messageService.add({
+                    detail: "Email Doesn't Exist, kindly login with different account",
+                    severity: 'error',
+                    summary: 'Not Registered'
+                })
+            }else if(res['status_code'] == 200){
+                this.loading = false
+                this.display = true
+            }else if(res['status_code'] == 401){
+                this.loading = false
+                this.messageService.add({
+                    detail: "Incorrect password, Kindly check the details",
+                    severity: 'error',
+                    summary: 'Incorrect password'
+                })
+            }
+        }else{
+            console.error(res)
+        }
+    }
+
 
 }

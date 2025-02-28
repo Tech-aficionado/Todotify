@@ -108,11 +108,11 @@ export class Register {
 
     password: string = '123456';
     fullname: string = 'Shivansh Goel';
-    otpValue!:number 
 
     checked: boolean = false;
     display: boolean = false;
     loading: boolean = false
+    otpValue!:number 
     submit() {
         this.loading = true
         console.log(this.fullname, this.email, this.password);

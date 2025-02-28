@@ -1,16 +1,33 @@
-import { Component } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { Route, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
+import { AuthService } from '../../../auth.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProductService } from '../../pages/service/product.service';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    providers: [AuthService,MessageService,ConfirmationService,],
+    imports: [RouterModule, CommonModule,ButtonModule,DialogModule,ConfirmPopupModule, StyleClassModule,TooltipModule, AppConfigurator],
     template: ` <div class="layout-topbar">
+        <p-dialog header="Confirmation" [(visible)]="displayConfirmation" [style]="{ width: '350px' }" [modal]="true">
+                    <div class="flex items-center justify-center">
+                        <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+                        <span>Are you sure you want to log out?</span>
+                    </div>
+                    <ng-template #footer>
+                        <p-button label="No" icon="pi pi-times" (click)="closeConfirmation()" text severity="secondary" />
+                        <p-button label="Yes" icon="pi pi-check" (click)="logout()" severity="danger" outlined autofocus />
+                    </ng-template>
+                </p-dialog>
         <div class="layout-topbar-logo-container">
             <!-- <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
@@ -66,33 +83,59 @@ import { LayoutService } from '../service/layout.service';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-github"></i>
-                        <span>Github</span>
+                    <button type="button" pTooltip="Github Profile"  tooltipPosition="bottom"  class="layout-topbar-action">
+                        <a href="https://github.com/Tech-aficionado" target="_blank"><i class="pi pi-github"></i></a>
+                        <span><a href="www.google.com">Github</a></span>
                     </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-linkedin"></i>
+                    <button type="button" pTooltip="Linked Profile" tooltipPosition="bottom"  class="layout-topbar-action">
+                        <a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank"><i class="pi pi-linkedin"></i></a>
                         <span>LinkedIn</span>
                     </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-bolt"></i>
+                    <button type="button" pTooltip="Projects" tooltipPosition="left"  class="layout-topbar-action">
+                        <a href="https://github.com/Tech-aficionado?tab=repositories" target="_blank"><i class="pi pi-bolt"></i></a>
                         <span>Projects</span>
                     </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
+                    <button #popup *ngIf="access" pTooltip="Logout" type="button" tooltipPosition="left" (click)="openConfirmation()"   class="layout-topbar-action">
+                        <i class="pi pi-sign-out"></i>
                         <span>Logout</span>
+                    </button>
+                    <button *ngIf="!access" pTooltip="Login" type="button" tooltipPosition="left"  routerLink="/auth/login" class="layout-topbar-action">
+                        <i class="pi pi-sign-in"></i>
+                        <span>Login</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>`
 })
-export class AppTopbar {
+export class AppTopbar implements OnInit {
     items!: MenuItem[];
+    access!: boolean 
+    displayConfirmation: boolean = false;
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(public layoutService: LayoutService,public authService: AuthService,public router: Router,
+            private confirmationService: ConfirmationService,
+            private messageService: MessageService) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
     }
+    ngOnInit(): void {
+        this.access  = this.authService.isAuthenticated()
+    }
+    logout(){
+        this.displayConfirmation = false;
+                localStorage.removeItem('access_token')
+                this.router.navigate(['auth/login'])
+            
+    }
+
+    openConfirmation() {
+        this.displayConfirmation = true;
+    }
+
+    closeConfirmation() {
+        this.displayConfirmation = false;
+    }
+
 }

@@ -3,8 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { json } from 'express';
 
-interface UserSchema{
+interface RegisterUserSchema{
     fullname: string;
+    email: string;
+    password: string
+}
+
+interface LoginUserSchema{
     email: string;
     password: string
 }
@@ -26,7 +31,7 @@ export class BackendService {
             })
         );
     }
-    createUser(userDetail: UserSchema){
+    createUser(userDetail: RegisterUserSchema){
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
@@ -51,6 +56,20 @@ export class BackendService {
             otp : otpValue
         }
         return this.http.post(this.apiUrl + "/validateOTP",JSON.stringify(otpparam),httpOptions).pipe(
+            map((response: any) => {
+                this.response = response;
+                return this.response;
+            })
+        );
+    }
+
+    login(userDetail: LoginUserSchema) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+            }),
+          };
+        return this.http.post(this.apiUrl + "/login",JSON.stringify(userDetail),httpOptions).pipe(
             map((response: any) => {
                 this.response = response;
                 return this.response;

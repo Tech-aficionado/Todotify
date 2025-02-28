@@ -45,6 +45,7 @@
         "@angular/cli": "^19.0.6",
         "@angular/compiler-cli": "^19.0.0",
         "@types/jasmine": "~5.1.0",
+        "@types/jsonwebtoken": "^9.0.9",
         "autoprefixer": "^10.4.20",
         "eslint": "^9.14.0",
         "eslint-config-prettier": "^9.1.0",
