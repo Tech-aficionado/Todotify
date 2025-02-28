@@ -39,4 +39,21 @@ export class BackendService {
             })
         );
     }
+    validateOTPAuth(email: string,otpValue: number){
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+            }),
+          };
+        const otpparam = {
+            mail: email,
+            otp : otpValue
+        }
+        return this.http.post(this.apiUrl + "/validateOTP",JSON.stringify(otpparam),httpOptions).pipe(
+            map((response: any) => {
+                this.response = response;
+                return this.response;
+            })
+        );
+    }
 }

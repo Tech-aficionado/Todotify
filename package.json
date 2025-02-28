@@ -1,6 +1,7 @@
 {
     "name": "todotify",
     "version": "19.0.0",
+    "type": "module",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -28,11 +29,14 @@
         "jsonwebtoken": "^9.0.2",
         "mysql": "^2.18.1",
         "mysql2": "^3.12.0",
+        "nodemailer": "^6.10.0",
+        "otpauth": "^9.3.6",
         "primeclt": "^0.1.5",
         "primeicons": "^7.0.0",
         "primeng": "^19.0.5",
         "rxjs": "~7.8.0",
         "tailwindcss-primeui": "^0.5.1",
+        "totp-generator": "^1.0.0",
         "tslib": "^2.3.0",
         "zone.js": "~0.15.0"
     },

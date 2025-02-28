@@ -5,10 +5,10 @@ import { Location } from '@angular/common';
 
 export const AuthenticationGaurds: CanActivateFn = (route: any, state: any) => {
     const router = inject(Router);
-    // const token = localStorage.getItem('Access_token') ?? false;
-    // if (token == false) {
-    // router.navigate(['auth/access']);
-    //   return false;
-    // }
+    const token = localStorage.getItem('access_token') ?? false;
+    if (token == false) {
+    router.navigate(['auth/access']);
+      return false;
+    }
     return true;
 };

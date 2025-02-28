@@ -1,21 +1,32 @@
-const path = require('path');
-const express = require('express');
-const mysql = require('mysql2/promise');
-const dayjs = require('dayjs');
-const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: '../.env' });
-const cors = require('cors');
-const { timeStamp } = require('console');
+
+import * as path from 'path'
+import  express from 'express'
+import  mysql from 'mysql2/promise'
+
+import dayjs from 'dayjs'
+
+import  jwt from 'jsonwebtoken'
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '../../.env' });
+import  cors from 'cors'
 const app = express();
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT
+};
 app.use(cors());
 app.use(express.json());
-const dbConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT
-};
+
+
+import sendOTPMail from './mail.js'
+import { otpVerify } from './otpauth.js'
+
+
+
+
 function tokenGenerator() {
     const keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let id = "";
@@ -49,9 +60,10 @@ console.log( "SELECT * FROM users WHERE email = '" + req.body.email +"'")
 
 
         if(user.length > 0){
-            res.json({status_code: 202,user})
+            res.json({status_code: 400,user})
         }else{
             let jwtSecretKey = process.env.JWT_SECRET_KEY;
+            
         let data = {
         fullname: req.body.fullname,
         email:req.body.email,
@@ -78,11 +90,46 @@ console.log( "SELECT * FROM users WHERE email = '" + req.body.email +"'")
 
         const response = await pool.execute(insert_query)
 
+        let mailRes = await sendOTPMail(req.body.email)
         console.log(req.body)
-        res.json({status_code: 200,token,response})
-        }
-
         
+        if (mailRes == 'Code Sent') {
+            console.log("OTP sent successfully");
+            res.json({status_code: 200,response})
+        } else {
+            console.error("Failed to send OTP");
+            res.json({status_code: 500,mailRes})
+        }
+        
+    }
+        
+    } catch (error) {
+        console.error('Error fetching users:', error);
+
+        res.status(500).send('Error fetching users from the database');
+    }
+});
+
+app.post('/validateOTP', async (req, res) => {
+    try {
+        const otp = req.body.otp
+        const mail = req.body.mail
+        const valid = await otpVerify(mail,otp)
+        console.log(valid)
+
+        if(valid == 200){
+        const sqlsearch = "SELECT * FROM users WHERE email = ? ";
+        const query = pool.format(sqlsearch,[req.body.mail]);
+        const [user] = await pool.execute(query);
+        const token = user[0]['sessionKey']
+        res.json({status_code: 200,token})
+        }else if (valid == 300){
+            res.json({status_code: 300,deatil:"Otp Expired"})
+        }else if(valid == 404){
+            res.json({status_code: 404,detail:"Invalid Token"})
+        }else{
+            res.json({status_code: 500,detail:"Something went wrong"})
+        }
     } catch (error) {
         console.error('Error fetching users:', error);
 
@@ -106,5 +153,5 @@ app.listen(port, () => {
 });
 
 // If server.js is in the same directory as the script you're running:
-const serverPath = path.join(__dirname, 'server.js');
-require(serverPath);
+// const serverPath = path.join(__dirname, 'server.js');
+// require(serverPath);

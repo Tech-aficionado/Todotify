@@ -5,11 +5,15 @@ import { RecentSalesWidget } from './components/recentsaleswidget';
 import { BestSellingWidget } from './components/bestsellingwidget';
 import { RevenueStreamWidget } from './components/revenuestreamwidget';
 import { Crud } from '../crud/crud';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [StatsWidget, Crud],
+    imports: [StatsWidget, Crud,ToastModule],
+    providers: [MessageService],
     template: `
+    <p-toast />
         <div class="grid grid-cols-12 gap-8">
             <app-stats-widget class="contents" />
         </div>
