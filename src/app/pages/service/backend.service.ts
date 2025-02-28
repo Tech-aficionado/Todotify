@@ -16,7 +16,7 @@ export class BackendService {
     response!: any[];
 
 
-    apiUrl = 'http://localhost:3000';
+    apiUrl = 'https://88k7cdg9-3000.inc1.devtunnels.ms';
 
     getUsers() {
         return this.http.get(this.apiUrl + "/users").pipe(
@@ -30,6 +30,7 @@ export class BackendService {
         const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
+              
             }),
           };
         return this.http.post(this.apiUrl + "/createUser",JSON.stringify(userDetail),httpOptions).pipe(
