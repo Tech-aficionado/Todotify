@@ -88,15 +88,15 @@ import { ButtonModule } from 'primeng/button';
                 <div class="layout-topbar-menu-content">
                     <button type="button" pTooltip="Github Profile" tooltipPosition="bottom" class="layout-topbar-action">
                         <a href="https://github.com/Tech-aficionado" target="_blank"><i class="pi pi-github"></i></a>
-                        <span><a href="www.google.com">Github</a></span>
+                        <span><a href="https://github.com/Tech-aficionado" target="_blank">Github</a></span>
                     </button>
                     <button type="button" pTooltip="Linked Profile" tooltipPosition="bottom" class="layout-topbar-action">
                         <a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank"><i class="pi pi-linkedin"></i></a>
-                        <span>LinkedIn</span>
+                        <span ><a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank">LinkedIn</a></span>
                     </button>
                     <button type="button" pTooltip="Projects" tooltipPosition="left" class="layout-topbar-action">
                         <a href="https://github.com/Tech-aficionado?tab=repositories" target="_blank"><i class="pi pi-bolt"></i></a>
-                        <span>Projects</span>
+                        <span><a href="https://github.com/Tech-aficionado?tab=repositories" target="_blank">Projects</a></span>
                     </button>
                     <button #popup *ngIf="access" pTooltip="Logout" type="button" tooltipPosition="left" (click)="openConfirmation()" class="layout-topbar-action">
                         <i class="pi pi-sign-out"></i>

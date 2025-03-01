@@ -17,10 +17,10 @@ import { CommonModule } from '@angular/common';
                 <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))">
                     <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                         <div class="flex items-center justify-center bg-yellow-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-users !text-2xl text-yellow-700"></i>
+                            <i class="pi pi-fw pi-thumbs-up !text-2xl text-yellow-700"></i>
                         </div>
                         <h5 class="mb-2 text-surface-900 dark:text-surface-0">Easy to Use</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Posuere morbi leo urna molestie.</span>
+                        <span class=" mb-2 text-surface-600 dark:text-surface-200">Intuitive interface for managing your tasks effortlessly</span>
                     </div>
                 </div>
             </div>
@@ -29,10 +29,10 @@ import { CommonModule } from '@angular/common';
                 <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))">
                     <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                         <div class="flex items-center justify-center bg-cyan-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-palette !text-2xl text-cyan-700"></i>
+                            <i class="pi pi-fw pi-wrench !text-2xl text-cyan-700"></i>
                         </div>
                         <h5 class="mb-2 text-surface-900 dark:text-surface-0">Fresh Design</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Semper risus in hendrerit.</span>
+                        <span  class=" mb-2 text-surface-600 dark:text-surface-200">Modern and vibrant design to enhance your productivity.</span>
                     </div>
                 </div>
             </div>
@@ -41,27 +41,29 @@ import { CommonModule } from '@angular/common';
                 <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))">
                     <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                         <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-map !text-2xl text-indigo-700"></i>
+                            <i class="pi pi-fw pi-shield !text-2xl text-indigo-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Well Documented</div>
-                        <span class="text-surface-600 dark:text-surface-200">Non arcu risus quis varius quam quisque.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Better Auth</div>
+                        <span class="text-surface-600 dark:text-surface-200">Secure and seamless authentication with JWT and OTP, ensuring robust user access and enhanced privacy.</span>
                     </div>
                 </div>
             </div>
 
             <div
-                class="col-span-12 mt-20 mb-20 p-2 md:p-20"
-                style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)"
-            >
-                <div class="flex flex-col justify-center items-center text-center px-4 py-4 md:py-0">
-                    <div class="text-gray-900 mb-2 text-3xl font-semibold">About Creator</div>
-                    <span class="text-gray-600 text-2xl">Shivansh Goel</span>
-                    <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
-                        “Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”
-                    </p>
-                    <img src="https://www.pngall.com/wp-content/uploads/13/Github-Logo.png" href="https://github.com/Tech-aficionado" class="mt-6" style="height:30px" alt="Company logo" />
-                </div>
-            </div>
+    class="col-span-12 mt-20 mb-20 p-2 md:p-20"
+    style="border-radius: 20px; background:radial-gradient(circle, rgb(64 59 138) 23%, rgb(6 3 37) 100%, rgb(255 255 255) 100%);"
+>
+    <div class="flex flex-col justify-center items-center text-center px-4 py-4 md:py-0">
+        <div class="text-gray-300 mb-2 text-3xl font-semibold">About Creator</div>
+        <span class="text-gray-200 text-2xl">Shivansh Goel</span>
+        <p class="text-gray-100 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
+            “I am Shivansh Goel, a passionate technology aficionado and software developer behind Todotify, your ultimate task management solution. With a deep interest in web development, full-stack engineering, and open-source technologies, I leverage tools like Angular, PrimeNG, Node.js, and MySQL to create intuitive, efficient, and modern applications. My journey in tech began with a curiosity for how software works, leading me to explore frameworks, APIs, and databases to build impactful solutions.”
+        </p>
+        <a href="https://github.com/Tech-aficionado" target="_blank" class="mt-6">
+            <img src="https://www.pngall.com/wp-content/uploads/13/Github-Logo.png" style="height: 30px" alt="GitHub Logo" />
+        </a>
+    </div>
+</div>
         </div>
     </div>`
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Product, ProductService } from '../service/product.service';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { BadgeModule } from 'primeng/badge';
+import { JsonpInterceptor } from '@angular/common/http';
 
 interface Column {
     field: string;
@@ -45,11 +48,13 @@ interface ExportColumn {
         RatingModule,
         InputTextModule,
         TextareaModule,
+        PanelMenuModule,
         SelectModule,
         RadioButtonModule,
         InputNumberModule,
         DialogModule,
         TagModule,
+        BadgeModule,
         InputIconModule,
         IconFieldModule,
         ConfirmDialogModule
@@ -69,6 +74,7 @@ interface ExportColumn {
         <p-table
             #dt
             [value]="products()"
+            *ngIf="!isMobileDevice()"
             [rows]="10"
             [columns]="cols"
             [paginator]="true"
@@ -83,7 +89,7 @@ interface ExportColumn {
         >
             <ng-template #caption>
                 <div class="flex items-center justify-between">
-                    <h5 class="m-0">Manage Products</h5>
+                    <h5 class="m-0">Manage Todos</h5>
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
@@ -95,26 +101,26 @@ interface ExportColumn {
                     <th style="width: 3rem">
                         <p-tableHeaderCheckbox />
                     </th>
-                    <th style="min-width: 16rem">Code</th>
-                    <th pSortableColumn="name" style="min-width:16rem">
+                    <th style="min-width: 1rem">Id</th>
+                    <th pSortableColumn="name" style="min-width:4rem">
                         Name
                         <p-sortIcon field="name" />
                     </th>
-                    <th>Image</th>
-                    <th pSortableColumn="price" style="min-width: 8rem">
-                        Price
-                        <p-sortIcon field="price" />
-                    </th>
+                    <th style="min-width:20rem">Description</th>
                     <th pSortableColumn="category" style="min-width:10rem">
-                        Category
+                        Status
                         <p-sortIcon field="category" />
                     </th>
                     <th pSortableColumn="rating" style="min-width: 12rem">
-                        Reviews
+                        Priority
                         <p-sortIcon field="rating" />
                     </th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 12rem">
-                        Status
+                        Created at
+                        <p-sortIcon field="inventoryStatus" />
+                    </th>
+                    <th pSortableColumn="inventoryStatus" style="min-width: 12rem">
+                        Due Date
                         <p-sortIcon field="inventoryStatus" />
                     </th>
                     <th style="min-width: 12rem"></th>
@@ -125,18 +131,20 @@ interface ExportColumn {
                     <td style="width: 3rem">
                         <p-tableCheckbox [value]="product" />
                     </td>
-                    <td style="min-width: 12rem">{{ product.code }}</td>
-                    <td style="min-width: 16rem">{{ product.name }}</td>
-                    <td>
-                        <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.name" style="width: 64px" class="rounded" />
-                    </td>
-                    <td>{{ product.price | currency: 'USD' }}</td>
-                    <td>{{ product.category }}</td>
-                    <td>
-                        <p-rating [(ngModel)]="product.rating" [readonly]="true" />
+                    <td style="min-width: 1rem">{{ product.code }}</td>
+                    <td style="min-width: 4rem">{{ product.name }}</td>
+                    <td style="min-width: 20rem">
+                    {{ product.name }}
                     </td>
                     <td>
                         <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                    </td>
+                    <td>
+                        <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                    </td>
+                    <td>{{ product.category }}</td>
+                    <td>
+                    {{ product.category }}
                     </td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" />
@@ -145,11 +153,27 @@ interface ExportColumn {
                 </tr>
             </ng-template>
         </p-table>
-
-        <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
+        <p-panelmenu *ngIf=" isMobileDevice()" styleClass="w-full md:w-80" [model]="panelMenuItems" >
+        <ng-template #item let-item>
+        <a pRipple class="flex items-center px-4 py-2 cursor-pointer group justify-between">
+            <span> <i [class]="item.icon + ' text-primary group-hover:text-inherit'"></i>
+            <span class="ml-2">
+                {{ item.label }}
+            </span></span>
+            <!-- <p-badge *ngIf="item.duedate" class="ml-auto" [value]="item.duedate" />
+            <p-tag [value]="item.inventoryStatus" *ngIf="item.inventoryStatus" class="ml-auto" [severity]="getSeverity(item.inventoryStatus)" /> -->
+            <p-tag [value]="item.value" *ngIf="item.value" class="ml-auto" [severity]="getSeverity(item.value)" />
+            <span>
+                <p-button icon="pi pi-pencil" *ngIf="item.edit"  class="ml-4 justify-content-end align-items-end" [rounded]="true" [outlined]="true" (click)="editProduct(item)" />
+            <p-button class="ml-4 justify-content-end align-items-end" *ngIf="item.delete" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="console(item)" />
+            </span>
+        </a>
+    </ng-template>
+        </p-panelmenu>
+        <p-dialog stripedRows  [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true">
             <ng-template #content>
                 <div class="flex flex-col gap-6">
-                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-4" *ngIf="product.image" />
+                    
                     <div>
                         <label for="name" class="block font-bold mb-3">Name</label>
                         <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus fluid />
@@ -207,6 +231,7 @@ interface ExportColumn {
         </p-dialog>
 
         <p-confirmdialog [style]="{ width: '450px' }" />
+        <p-toast />
     `,
     providers: [MessageService, ProductService, ConfirmationService]
 })
@@ -241,7 +266,110 @@ export class Crud implements OnInit {
 
     ngOnInit() {
         this.loadDemoData();
+        window.addEventListener('resize', () => {
+            let i = 0
+            console.log('Is mobile:',  this.isMobileDevice());
+            i++;
+            this.messageService.add({
+                severity: 'success',
+                summary: String(this.isMobileDevice()),
+            });
+        });
     }
+    toggleMenu(event: Event, item: MenuItem): void {
+        item.expanded = !item.expanded; // Toggle submenu visibility
+        event.stopPropagation(); // Prevent unwanted bubbling
+    }
+    console(id: any){
+        this.messageService.add({
+            severity: 'info',
+            summary: JSON.stringify(id),
+        });
+    }
+    panelMenuItems = [
+        {
+            label: 'Cook Food',
+            icon: 'pi pi-envelope',
+            duedate:'12/12/2002',
+            inventoryStatus: 'INSTOCK',
+            delete: true,
+            edit: true,
+            id: '1000',
+                code: 1,
+                name: 'Bamboo Watch',
+                description: 'Product Description',
+                image: 'bamboo-watch.jpg',
+                price: 65,
+                category: 'Accessories',
+                quantity: 24,
+                rating: 5,
+            items: [
+                {
+                    label: 'Name: ',
+                    icon: 'pi pi-file-edit',
+                    value: 'Cook Food',
+                    delete: false,
+                    edit: false
+                },
+                {
+                    label: 'Description: ',
+                    icon: 'pi pi-inbox',
+                    value: 'Breakfast',
+                    delete: false,
+                    edit: false
+                },
+                {
+                    label: 'Created At: ',
+                    icon: 'pi pi-send',
+                    value: '25/2/2025',
+                    delete: false,
+                    edit: false
+                },
+                {
+                    label: 'Due Date: ',
+                    icon: 'pi pi-trash',
+                    value: '14/3/2025',
+                    delete: false,
+                    edit: false
+                }
+            ]
+        },
+        {
+            label: 'Reports',
+            icon: 'pi pi-chart-bar',
+            
+            inventoryStatus: 'INSTOCK',
+            items: [
+                {
+                    label: 'Sales',
+                    icon: 'pi pi-chart-line',
+                    inventoryStatus: 'INSTOCK'
+                },
+                {
+                    label: 'Products',
+                    icon: 'pi pi-list',
+                    inventoryStatus: 'INSTOCK'
+                }
+            ]
+        },
+        {
+            label: 'Profile',
+            icon: 'pi pi-user',
+            inventoryStatus: 'INSTOCK',
+            items: [
+                {
+                    label: 'Settings',
+                    icon: 'pi pi-cog',
+                    inventoryStatus: 'INSTOCK',
+                },
+                {
+                    label: 'Privacy',
+                    icon: 'pi pi-shield',
+                    inventoryStatus: 'INSTOCK',
+                }
+            ]
+        }
+    ];
 
     loadDemoData() {
         this.productService.getProducts().then((data) => {
@@ -384,4 +512,18 @@ export class Crud implements OnInit {
             this.product = {};
         }
     }
+
+    isMobileDevice(): boolean {
+        // Check user agent string for common mobile device keywords
+        const userAgent: string = navigator.userAgent.toLowerCase();
+        const mobileKeywords: RegExp = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+        const isMobileUA: boolean = mobileKeywords.test(userAgent);
+    
+        // Check screen width (common mobile threshold is 768px)
+        const isMobileWidth: boolean = window.innerWidth <= 768;
+    
+        // Return true if either user agent or screen width indicates mobile
+        return isMobileUA || isMobileWidth;
+    }
+    
 }
