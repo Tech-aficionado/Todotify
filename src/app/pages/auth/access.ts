@@ -24,7 +24,7 @@ import { AppTopbar } from '../../layout/component/app.topbar';
                             <span class="text-muted-color mb-8">You are not registered to the application. Please SignIn.</span>
                             <img src="https://primefaces.org/cdn/templates/sakai/auth/asset-access.svg" alt="Access denied" class="mb-8" width="80%" />
                             <div class="col-span-12 mt-8 text-center">
-                                <p-button label="Go to Login" routerLink="/auth/login" [style]="{'color': 'var(--primary-color);'}"  />
+                                <p-button label="Go to Login" routerLink="/auth/login" [style]="{ color: 'var(--primary-color);' }" />
                             </div>
                         </div>
                     </div>

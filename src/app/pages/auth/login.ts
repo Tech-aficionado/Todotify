@@ -20,30 +20,27 @@ import { ToastModule } from 'primeng/toast';
 @Component({
     selector: 'app-login',
     standalone: true,
-    providers:[BackendService,MessageService],
-    imports: [ButtonModule,InputOtpModule,DialogModule,ToastModule,MessageModule, AppTopbar, FloatLabelModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
+    providers: [BackendService, MessageService],
+    imports: [ButtonModule, InputOtpModule, DialogModule, ToastModule, MessageModule, AppTopbar, FloatLabelModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppConfigurator],
     template: `
-    <p-toast />
+        <p-toast />
         <app-topbar></app-topbar>
         <app-configurator />
-        <p-dialog header="Verify your account" [(visible)]="display" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '30vw' }"  [modal]="true">
-                   <div class="flex justify-center items-center gap-4 mb-4">
-                   <p class="leading-normal m-0">
-                        Enter OTP to verify your account
-                    </p>
-                   </div>
-                   <div  class="flex justify-center items-center gap-4 mb-4">
-                    
-                   <p-message severity="info" >Check your Inbox</p-message>
-                   </div>
-                   <div class="flex justify-center items-center gap-4 mb-4">
-                   <p-inputotp [(ngModel)]="otpValue" [integerOnly]="true" />
-                   </div>
-                   
-                   <ng-template #footer>
-                        <p-button [loading]="loading" label="Verify" (click)="verifyToken()" />
-                    </ng-template>
-                </p-dialog>
+        <p-dialog header="Verify your account" [(visible)]="display" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '30vw' }" [modal]="true">
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <p class="leading-normal m-0">Enter OTP to verify your account</p>
+            </div>
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <p-message severity="info">Check your Inbox</p-message>
+            </div>
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <p-inputotp [(ngModel)]="otpValue" [integerOnly]="true" />
+            </div>
+
+            <ng-template #footer>
+                <p-button [loading]="loading" label="Verify" (click)="verifyToken()" />
+            </ng-template>
+        </p-dialog>
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
             <div class="flex flex-col items-center justify-center">
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -66,7 +63,10 @@ import { ToastModule } from 'primeng/toast';
                                     />
                                 </g>
                             </svg> -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto" width="32" height="32" viewBox="0 0 42 42"><path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z"/><path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto" width="32" height="32" viewBox="0 0 42 42">
+                                <path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z" />
+                                <path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z" />
+                            </svg>
                             <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back</div>
                             <span class="text-muted-color font-medium">Sign in to continue</span>
                         </div>
@@ -75,7 +75,7 @@ import { ToastModule } from 'primeng/toast';
                             <!-- <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium">Email</label>
                             <input pInputText id="email1" type="text" placeholder="Email address" type="email" class="w-full md:w-[30rem] mb-5" [(ngModel)]="email" /> -->
                             <p-floatlabel variant="on" class="mb-5">
-                                <input  pInputText id="email1" type="email" class="w-full md:w-[30rem]" [(ngModel)]="email" />
+                                <input pInputText id="email1" type="email" class="w-full md:w-[30rem]" [(ngModel)]="email" />
                                 <label for="email1">Email</label>
                             </p-floatlabel>
                             <!-- <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl">Password</label>
@@ -96,91 +96,91 @@ import { ToastModule } from 'primeng/toast';
     `
 })
 export class Login {
-    constructor(public router: Router,public backend: BackendService,private messageService: MessageService) {}
+    constructor(
+        public router: Router,
+        public backend: BackendService,
+        private messageService: MessageService
+    ) {}
     email: string = 'agsgxharmony@gmail.com';
 
     password: string = '123456';
 
     checked: boolean = false;
     display: boolean = false;
-    loading: boolean = false
-    otpValue!:number 
-    submit(){
-
+    loading: boolean = false;
+    otpValue!: number;
+    submit() {
         const user = {
             email: this.email,
             password: this.password
-        }
+        };
 
         this.backend.login(user).subscribe({
-            next:(value: any)=> {
-                console.log(value['status_code'])
-                this.authenticator(value)
-            },
-        })
-        this.loading = true
-        
+            next: (value: any) => {
+                console.log(value['status_code']);
+                this.authenticator(value);
+            }
+        });
+        this.loading = true;
     }
 
     verifyToken() {
-        this.loading  = true
-        this.backend.validateOTPAuth(this.email,this.otpValue).subscribe({
-            next:(res:any)=> {
-                if (res){
-                    if(res['status_code'] == 404){
-                        this.loading = false
+        this.loading = true;
+        this.backend.validateOTPAuth(this.email, this.otpValue).subscribe({
+            next: (res: any) => {
+                if (res) {
+                    if (res['status_code'] == 404) {
+                        this.loading = false;
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Invalid Otp'
-                        })
-                    }else if(res['status_code'] == 200){
-                        this.loading = false
-                        this.display = false
+                        });
+                    } else if (res['status_code'] == 200) {
+                        this.loading = false;
+                        this.display = false;
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Thanks for registration!!'
-                        })
-                        localStorage.setItem("access_token",res['token'])
-                        this.router.navigate(['dashboard'])
-                    }else if(res['status_code'] == 300){
-                        this.loading = false
+                        });
+                        localStorage.setItem('access_token', res['token']);
+                        this.router.navigate(['dashboard']);
+                    } else if (res['status_code'] == 300) {
+                        this.loading = false;
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Expired Otp'
-                        })
+                        });
                     }
-                }else{
-                    console.error(res)
-                    this.loading = false
+                } else {
+                    console.error(res);
+                    this.loading = false;
                 }
-            },
-        })
+            }
+        });
     }
 
-    authenticator(res:any){
-        if (res){
-            if(res['status_code'] == 404){
-                this.loading = false
+    authenticator(res: any) {
+        if (res) {
+            if (res['status_code'] == 404) {
+                this.loading = false;
                 this.messageService.add({
                     detail: "Email Doesn't Exist, kindly login with different account",
                     severity: 'error',
                     summary: 'Not Registered'
-                })
-            }else if(res['status_code'] == 200){
-                this.loading = false
-                this.display = true
-            }else if(res['status_code'] == 401){
-                this.loading = false
+                });
+            } else if (res['status_code'] == 200) {
+                this.loading = false;
+                this.display = true;
+            } else if (res['status_code'] == 401) {
+                this.loading = false;
                 this.messageService.add({
-                    detail: "Incorrect password, Kindly check the details",
+                    detail: 'Incorrect password, Kindly check the details',
                     severity: 'error',
                     summary: 'Incorrect password'
-                })
+                });
             }
-        }else{
-            console.error(res)
+        } else {
+            console.error(res);
         }
     }
-
-
 }

@@ -1,14 +1,20 @@
+import { ButtonDemo } from './../../uikit/buttondemo';
 import { state } from '@angular/animations';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BackendService } from '../../service/backend.service';
+import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     standalone: true,
     selector: 'app-stats-widget',
-    imports: [CommonModule],
-    template: `
-    <div class="col-span-12 lg:col-span-6 xl:col-span-3 " >
-            <div class="card mb-0 "style="border-radius: 15px;">
+    imports: [CommonModule, ButtonModule, ToastModule],
+    providers: [BackendService, MessageService],
+    template: ` <div *ngIf="loading" class="col-span-12 lg:col-span-6 xl:col-span-3 ">
+            <div class="card mb-0 " style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Total Todos</span>
@@ -20,8 +26,8 @@ import { CommonModule } from '@angular/common';
                 </div>
             </div>
         </div>
-        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0"style="border-radius: 15px;">
+        <div *ngIf="loading" class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0" style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Completed Todos</span>
@@ -33,8 +39,8 @@ import { CommonModule } from '@angular/common';
                 </div>
             </div>
         </div>
-        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0"style="border-radius: 15px;">
+        <div *ngIf="loading" class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0" style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Pending Todos</span>
@@ -46,8 +52,8 @@ import { CommonModule } from '@angular/common';
                 </div>
             </div>
         </div>
-        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-            <div class="card mb-0"style="border-radius: 15px;">
+        <div *ngIf="loading" class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0" style="border-radius: 15px;">
                 <div class="flex justify-between mb-4">
                     <div>
                         <span class="block text-muted-color font-medium mb-4">Missed Todos</span>
@@ -58,11 +64,62 @@ import { CommonModule } from '@angular/common';
                     </div>
                 </div>
             </div>
-        </div>`
+        </div>
+        <div *ngIf="!loading" class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card " style="border-radius: 15px;">
+                <div class="flex justify-center align-items-center ">
+                    <p-button [loading]="true" label="Fetching Todo Counts" />
+                </div>
+            </div>
+        </div>
+        <p-toast />`
 })
-export class StatsWidget {
+export class StatsWidget implements OnInit {
+    constructor(
+        private messageService: MessageService,
+        public backend: BackendService,
+        public router: Router
+    ) {}
     PendingTodos: number = 0;
     MissedTodos: number = 0;
     CompletedTodos: number = 0;
     TotalTodos: number = 0;
+    loading: boolean = false;
+
+    ngOnInit() {
+        const token = localStorage.getItem('access_token') ?? '';
+        this.backend.todo_counts(token).subscribe({
+            next: (value: any) => {
+                this.loading = true;
+                if (value['status_code'] == 404) {
+                    this.loading = false;
+                    this.messageService.add({
+                        summary: 'Unauthorised Access',
+                        severity: 'error'
+                    });
+                    setTimeout(() => {
+                        this.router.navigate(['auth/access']);
+                    }, 1500);
+                } else if (value['status_code'] == 200) {
+                    this.set_counts(value['todo_counts']);
+                } else if (value['status_code'] == 401) {
+                    this.loading = false;
+                    this.messageService.add({
+                        summary: 'Session Expired',
+                        severity: 'error'
+                    });
+                    setTimeout(() => {
+                        this.router.navigate(['auth/login']);
+                    }, 1500);
+                }
+            }
+        });
+    }
+
+    set_counts(todos: any) {
+        this.TotalTodos = todos['total'];
+        this.MissedTodos = todos['missing'];
+        this.PendingTodos = todos['pending'];
+        this.CompletedTodos = todos['completed'];
+    }
 }

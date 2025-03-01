@@ -15,19 +15,19 @@ import { ButtonModule } from 'primeng/button';
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    providers: [AuthService,MessageService,ConfirmationService,],
-    imports: [RouterModule, CommonModule,ButtonModule,DialogModule,ConfirmPopupModule, StyleClassModule,TooltipModule, AppConfigurator],
+    providers: [AuthService, MessageService, ConfirmationService],
+    imports: [RouterModule, CommonModule, ButtonModule, DialogModule, ConfirmPopupModule, StyleClassModule, TooltipModule, AppConfigurator],
     template: ` <div class="layout-topbar">
         <p-dialog header="Confirmation" [(visible)]="displayConfirmation" [style]="{ width: '350px' }" [modal]="true">
-                    <div class="flex items-center justify-center">
-                        <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
-                        <span>Are you sure you want to log out?</span>
-                    </div>
-                    <ng-template #footer>
-                        <p-button label="No" icon="pi pi-times" (click)="closeConfirmation()" text severity="secondary" />
-                        <p-button label="Yes" icon="pi pi-check" (click)="logout()" severity="danger" outlined autofocus />
-                    </ng-template>
-                </p-dialog>
+            <div class="flex items-center justify-center">
+                <i class="pi pi-exclamation-triangle mr-4" style="font-size: 2rem"> </i>
+                <span>Are you sure you want to log out?</span>
+            </div>
+            <ng-template #footer>
+                <p-button label="No" icon="pi pi-times" (click)="closeConfirmation()" text severity="secondary" />
+                <p-button label="Yes" icon="pi pi-check" (click)="logout()" severity="danger" outlined autofocus />
+            </ng-template>
+        </p-dialog>
         <div class="layout-topbar-logo-container">
             <!-- <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
@@ -51,8 +51,11 @@ import { ButtonModule } from 'primeng/button';
                     </g>
                 </svg> -->
                 <!-- <svg  xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 30 30"><path fill="var(--primary-color)" d="M224.002 0H31.998C14.358.04.061 14.337 0 32v192c0 17.6 14.397 32 31.998 32h192.004c17.6 0 31.998-14.4 31.998-32V32c0-17.6-14.397-32-31.998-32"/><path fill="#fff" d="M54.133 120.802c4.463-2.606 100.343-58.325 102.535-59.616c2.192-1.275 2.311-5.196-.16-6.615c-2.454-1.41-7.117-4.089-8.846-5.117a8.03 8.03 0 0 0-7.907.096c-1.227.717-83.151 48.299-85.885 49.86c-3.292 1.882-7.333 1.914-10.6 0L0 74.019v21.583c10.52 6.2 36.718 21.599 43.062 25.225c3.786 2.152 7.413 2.105 11.079-.024"/><path fill="#fff" d="M54.133 161.61c4.463-2.607 100.343-58.326 102.535-59.617c2.192-1.275 2.311-5.196-.16-6.615c-2.454-1.41-7.117-4.089-8.846-5.117a8.03 8.03 0 0 0-7.907.096c-1.227.717-83.151 48.298-85.885 49.86c-3.292 1.882-7.333 1.913-10.6 0L0 114.826v21.583c10.52 6.2 36.718 21.599 43.062 25.225c3.786 2.152 7.413 2.104 11.079-.024"/><path fill="#fff" d="M54.133 204.967c4.463-2.607 100.343-58.326 102.535-59.617c2.192-1.275 2.311-5.196-.16-6.615c-2.454-1.41-7.117-4.088-8.846-5.117a8.03 8.03 0 0 0-7.907.096c-1.227.717-83.151 48.299-85.885 49.86c-3.292 1.882-7.333 1.914-10.6 0L0 158.183v21.583c10.52 6.2 36.718 21.6 43.062 25.225c3.786 2.152 7.413 2.105 11.079-.023"/></svg> -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2" width="32" height="32" viewBox="0 0 48 48"><path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z"/><path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z"/></svg>
-                <span  style=";font-family: 'Oxygen', serif;">TODOTIFY</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2" width="32" height="32" viewBox="0 0 48 48">
+                    <path fill="#3f51b5" d="m17.8 18.1l-7.4 7.3l-4.2-4.1L4 23.5l6.4 6.4l9.6-9.6zm0-13l-7.4 7.3l-4.2-4.1L4 10.5l6.4 6.4L20 7.3zm0 26l-7.4 7.3l-4.2-4.1L4 36.5l6.4 6.4l9.6-9.6z" />
+                    <path fill="#90caf9" d="M24 22h20v4H24zm0-13h20v4H24zm0 26h20v4H24z" />
+                </svg>
+                <span style=";font-family: 'Oxygen', serif;">TODOTIFY</span>
             </a>
         </div>
 
@@ -83,23 +86,23 @@ import { ButtonModule } from 'primeng/button';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" pTooltip="Github Profile"  tooltipPosition="bottom"  class="layout-topbar-action">
+                    <button type="button" pTooltip="Github Profile" tooltipPosition="bottom" class="layout-topbar-action">
                         <a href="https://github.com/Tech-aficionado" target="_blank"><i class="pi pi-github"></i></a>
                         <span><a href="www.google.com">Github</a></span>
                     </button>
-                    <button type="button" pTooltip="Linked Profile" tooltipPosition="bottom"  class="layout-topbar-action">
+                    <button type="button" pTooltip="Linked Profile" tooltipPosition="bottom" class="layout-topbar-action">
                         <a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank"><i class="pi pi-linkedin"></i></a>
                         <span>LinkedIn</span>
                     </button>
-                    <button type="button" pTooltip="Projects" tooltipPosition="left"  class="layout-topbar-action">
+                    <button type="button" pTooltip="Projects" tooltipPosition="left" class="layout-topbar-action">
                         <a href="https://github.com/Tech-aficionado?tab=repositories" target="_blank"><i class="pi pi-bolt"></i></a>
                         <span>Projects</span>
                     </button>
-                    <button #popup *ngIf="access" pTooltip="Logout" type="button" tooltipPosition="left" (click)="openConfirmation()"   class="layout-topbar-action">
+                    <button #popup *ngIf="access" pTooltip="Logout" type="button" tooltipPosition="left" (click)="openConfirmation()" class="layout-topbar-action">
                         <i class="pi pi-sign-out"></i>
                         <span>Logout</span>
                     </button>
-                    <button *ngIf="!access" pTooltip="Login" type="button" tooltipPosition="left"  routerLink="/auth/login" class="layout-topbar-action">
+                    <button *ngIf="!access" pTooltip="Login" type="button" tooltipPosition="left" routerLink="/auth/login" class="layout-topbar-action">
                         <i class="pi pi-sign-in"></i>
                         <span>Login</span>
                     </button>
@@ -110,24 +113,27 @@ import { ButtonModule } from 'primeng/button';
 })
 export class AppTopbar implements OnInit {
     items!: MenuItem[];
-    access!: boolean 
+    access!: boolean;
     displayConfirmation: boolean = false;
 
-    constructor(public layoutService: LayoutService,public authService: AuthService,public router: Router,
-            private confirmationService: ConfirmationService,
-            private messageService: MessageService) {}
+    constructor(
+        public layoutService: LayoutService,
+        public authService: AuthService,
+        public router: Router,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService
+    ) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
     }
     ngOnInit(): void {
-        this.access  = this.authService.isAuthenticated()
+        this.access = this.authService.isAuthenticated();
     }
-    logout(){
+    logout() {
         this.displayConfirmation = false;
-                localStorage.removeItem('access_token')
-                this.router.navigate(['auth/login'])
-            
+        localStorage.removeItem('access_token');
+        this.router.navigate(['auth/login']);
     }
 
     openConfirmation() {
@@ -137,5 +143,4 @@ export class AppTopbar implements OnInit {
     closeConfirmation() {
         this.displayConfirmation = false;
     }
-
 }

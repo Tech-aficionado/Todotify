@@ -10,10 +10,10 @@ import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [StatsWidget, Crud,ToastModule],
+    imports: [StatsWidget, Crud, ToastModule],
     providers: [MessageService],
     template: `
-    <p-toast />
+        <p-toast />
         <div class="grid grid-cols-12 gap-8">
             <app-stats-widget class="contents" />
         </div>
