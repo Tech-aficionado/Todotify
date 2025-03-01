@@ -97,20 +97,17 @@ export class StatsWidget implements OnInit {
                         summary: 'Unauthorised Access',
                         severity: 'error'
                     });
-                    setTimeout(() => {
-                        this.router.navigate(['auth/access']);
-                    }, 1500);
+                    localStorage.removeItem('access_token')
+                    this.router.navigate(['auth/access']);
                 } else if (value['status_code'] == 200) {
                     this.set_counts(value['todo_counts']);
                 } else if (value['status_code'] == 401) {
                     this.loading = false;
+                    localStorage.removeItem('access_token')
                     this.messageService.add({
                         summary: 'Session Expired',
                         severity: 'error'
-                    });
-                    setTimeout(() => {
-                        this.router.navigate(['auth/login']);
-                    }, 1500);
+                    });this.router.navigate(['auth/login']);
                 }
             }
         });
