@@ -43,8 +43,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-shield !text-2xl text-indigo-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Better Auth</div>
-                        <span class="text-surface-600 dark:text-surface-200">Secure and seamless authentication with JWT and OTP, ensuring robust user access and enhanced privacy.</span>
+                        <div class="mt-6 mb-2 text-surface-900 dark:text-surface-0 text-xl font-semibold">Better Auth</div>
+                        <span class="mb-4 text-surface-600 dark:text-surface-200">Secure and seamless authentication with JWT and OTP, ensuring proper access and privacy.</span>
                     </div>
                 </div>
             </div>

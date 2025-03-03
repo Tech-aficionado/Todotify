@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { style } from '@angular/animations';
+import { ChangeDetectorRef, Component, OnInit, signal, ViewChild } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -25,6 +26,11 @@ import { JsonpInterceptor } from '@angular/common/http';
 import { BackendService } from '../service/backend.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ListboxModule } from 'primeng/listbox';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { AvatarModule } from 'primeng/avatar';
+import { Popover, PopoverModule } from 'primeng/popover';
 
 interface Column {
     field: string;
@@ -54,26 +60,50 @@ interface ExportColumn {
         InputTextModule,
         TextareaModule,
         PanelMenuModule,
+        PopoverModule,
         SelectModule,
         RadioButtonModule,
         InputNumberModule,
         DialogModule,
         TagModule,
         BadgeModule,
+        MultiSelectModule ,
+        ListboxModule ,
         InputIconModule,
+        OverlayBadgeModule,
+        AvatarModule ,
         IconFieldModule,
         ConfirmDialogModule
     ],
     template: `
-        <p-toolbar styleClass="mb-6">
+        <p-toolbar styleClass="mb-2">
             <ng-template #start>
                 <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
                 <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
             </ng-template>
 
-            <ng-template #end>
+            <ng-template *ngIf="!isMobileDevice()" #end>
                 <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+            </ng-template> 
+            <ng-template *ngIf="isMobileDevice()" #end>
+                <p-button type="button" icon="pi pi-filter" (onClick)="toggle($event)" />
             </ng-template>
+            <p-popover #op>
+        <div class="flex flex-col gap-4">
+            <div>
+                <span class="font-medium block mb-2">Select Status</span>
+                <ul class="list-none p-0 m-0 flex flex-col">
+                    <li *ngFor="let member of Statuses" class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border" (click)="selectMember(member.value)">
+                        <div>
+                            <span class="bg-black p-2 font-medium" style="border-radius: 10%">{{ member.label }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </p-popover>
+            
+
         </p-toolbar>
 
         <p-table
@@ -116,11 +146,26 @@ interface ExportColumn {
                     <th style="min-width:23rem">Description</th>
                     <th pSortableColumn="status" style="min-width:8rem">
                         Status
-                        <p-sortIcon field="status" />
+                        <p-columnFilter field="status" matchMode="in"  display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                        <ng-template #header>
+                            <div class="px-4 pt-4 pb-0">
+                                <span class="font-bold">Statuses</span>
+                            </div>
+                        </ng-template>
+                        <ng-template #filter let-value let-filter="filterCallback">
+                            <p-select [(ngModel)]="filterStatus"  [showClear]="true" [options]="Statuses" placeholder="Any" (onChange)="filterByStatus()" optionLabel="label" optionValue="value" >
+                                <ng-template let-option #item>
+                                    <div class="inline-block align-middle">
+                                        <span class="ml-1 mt-1">{{ option.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-select>
+                        </ng-template>
+                    </p-columnFilter>
                     </th>
-                    <th pSortableColumn="rating" style="min-width: 7rem">
+                    <th  style="min-width: 9rem">
                         Priority
-                        <p-sortIcon field="rating" />
+                        
                     </th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 12rem">
                         Created at
@@ -160,23 +205,56 @@ interface ExportColumn {
                 </tr>
             </ng-template>
         </p-table>
-        <p-panelmenu *ngIf=" isMobileDevice()" styleClass="w-full md:w-80" [model]="panelMenuItems" >
-        <ng-template #item let-item>
-        <a pRipple class="flex items-center px-4 py-2 cursor-pointer group justify-between">
-            <span> <i [class]="item.icon + ' text-primary group-hover:text-inherit'"></i>
-            <span class="ml-2">
-                {{ item.label }}
-            </span></span>
-            <!-- <p-badge *ngIf="item.duedate" class="ml-auto" [value]="item.duedate" />
-            <p-tag [value]="item.inventoryStatus" *ngIf="item.inventoryStatus" class="ml-auto" [severity]="getSeverity(item.inventoryStatus)" /> -->
-            <p-tag [value]="item.value" *ngIf="item.value" class="ml-auto" [severity]="getSeverity(item.value)" />
-            <span>
-                <p-button icon="pi pi-pencil" *ngIf="item.edit"  class="ml-4 justify-content-end align-items-end" [rounded]="true" [outlined]="true" (click)="editProduct(item)" />
-            <p-button class="ml-4 justify-content-end align-items-end" *ngIf="item.delete" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="console(item)" />
-            </span>
-        </a>
-    </ng-template>
-        </p-panelmenu>
+
+        <p-panelmenu 
+  *ngIf="isMobileDevice()" 
+  styleClass="w-full md:w-80" 
+  [model]="panelMenuItems">
+  <ng-template #item let-item>
+    <a 
+      pRipple 
+      class="flex items-center px-4 py-2 cursor-pointer group justify-between w-full"
+      [ngClass]="{'bg-hover': !item.expanded}"
+    >
+      <div class="flex w-full items-center justify-between">
+        <!-- Left Section: Icon and Label -->
+        <div class="flex items-center flex-grow">
+          <i [class]="item.icon + ' text-primary group-hover:text-inherit mr-2'"></i>
+          <span class="ml-1 truncate">{{ item.label }}</span>
+        </div>
+
+        <!-- Right Section: Status Tag, Buttons, and Avatar -->
+        <div class="flex items-center gap-2">
+          <p-tag 
+            [value]="item.value" 
+            *ngIf="item.value" 
+            [severity]="getSeverity(item.value)" 
+            [ngStyle]="{'max-width': '150px'}"
+          />
+          <p-button 
+            *ngIf="item.edit" 
+            icon="pi pi-pencil" 
+            class="p-button-rounded p-button-outlined" 
+            (click)="editProduct(item)"
+          />
+          <p-button 
+            *ngIf="item.delete" 
+            icon="pi pi-trash" 
+            severity="danger" 
+            class="p-button-rounded p-button-outlined" 
+            (click)="console(item)"
+          />
+          <p-avatar 
+            *ngIf="item.bg" 
+            size="normal" 
+            shape="circle" 
+            [style]="{'background-color': item.bg}"
+          />
+        </div>
+      </div>
+    </a>
+  </ng-template>
+</p-panelmenu>
         <p-dialog stripedRows  [(visible)]="productDialog" [style]="{ 'width ': '550px','height': '500px' }" header="Product Details ( Real Time Update)" [modal]="true">
             <ng-template #content>
                 <div class="flex flex-col gap-6 mt-3">
@@ -246,41 +324,79 @@ export class Crud implements OnInit {
         { label: 'High', value: 'High' },
         { label: 'Medium', value: 'Medium' },
         { label: 'Low', value: 'Low' }
-    ];;
+    ];
+
+    Statuses: priority[] = [
+        { label: 'Missing', value: 'Missing' },
+        { label: 'Completed', value: 'Completed' },
+        { label: 'Pending', value: 'Pending' }
+    ];
+
+
 
     @ViewChild('dt') dt!: Table;
+    @ViewChild('op') op!: Popover;
+
+    toggle(event: any) {
+        this.op.toggle(event);
+    }
+
+    selectMember(member: any) {
+        this.filterStatus = member;
+        this.op.hide();
+        this.filterByStatus();
+    }
 
     exportColumns!: ExportColumn[];
 
     cols!: Column[];
+    filterStatus!: string
+    dict:any[] = [];
 
     constructor(
         private productService: ProductService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
                 public backend: BackendService,
+                private cdr: ChangeDetectorRef
     ) {}
 
     exportCSV() {
         this.dt.exportCSV();
     }
+    clear(table: Table) {
+        table.clear();
+        this.filterStatus = ''
+    }
+
+
+    filterByStatus(){
+        this.loading = true
+        const token = localStorage.getItem('access_token')
+        this.backend.getTodosFilteredByStatus(token!,this.filterStatus).subscribe({
+            next: (value: any) => {
+                this.products.set(value['todos'])
+                console.log(this.products)
+                this.loading = false
+                this.isMobileDevice() ? this.mobilePanelMenuMapper() : ''
+                this.cdr.detectChanges();
+        
+                this.products().forEach((element)=>{
+                    element.due_date = new Date(element.due_date as unknown as string);
+                    element.created_at = new Date(element.created_at as unknown as string);
+                })
+            }
+        });
+    }
+
+
 
     ngOnInit() {
         this.loading = true
-        this.loadDemoData();
+        this.loadData();
         window.addEventListener('resize', () => {
-            let i = 0
-            console.log('Is mobile:',  this.isMobileDevice());
-            i++;
-            this.messageService.add({
-                severity: 'success',
-                summary: String(this.isMobileDevice()),
-            });
+            this.isMobileDevice()
         });
-    }
-    toggleMenu(event: Event, item: MenuItem): void {
-        item.expanded = !item.expanded; // Toggle submenu visibility
-        event.stopPropagation(); // Prevent unwanted bubbling
     }
     console(id: any){
         this.messageService.add({
@@ -288,104 +404,28 @@ export class Crud implements OnInit {
             summary: JSON.stringify(id),
         });
     }
-    panelMenuItems = [
-        {
-            label: 'Cook Food',
-            icon: 'pi pi-envelope',
-            duedate:'12/12/2002',
-            inventoryStatus: 'INSTOCK',
-            delete: true,
-            edit: true,
-            id: '1000',
-                code: 1,
-                name: 'Bamboo Watch',
-                description: 'Product Description',
-                image: 'bamboo-watch.jpg',
-                price: 65,
-                category: 'Accessories',
-                quantity: 24,
-                rating: 5,
-            items: [
-                {
-                    label: 'Name: ',
-                    icon: 'pi pi-file-edit',
-                    value: 'Cook Food',
-                    delete: false,
-                    edit: false
-                },
-                {
-                    label: 'Description: ',
-                    icon: 'pi pi-inbox',
-                    value: 'Breakfast',
-                    delete: false,
-                    edit: false
-                },
-                {
-                    label: 'Created At: ',
-                    icon: 'pi pi-send',
-                    value: '25/2/2025',
-                    delete: false,
-                    edit: false
-                },
-                {
-                    label: 'Due Date: ',
-                    icon: 'pi pi-trash',
-                    value: '14/3/2025',
-                    delete: false,
-                    edit: false
-                }
-            ]
-        },
-        {
-            label: 'Reports',
-            icon: 'pi pi-chart-bar',
-            
-            inventoryStatus: 'INSTOCK',
-            items: [
-                {
-                    label: 'Sales',
-                    icon: 'pi pi-chart-line',
-                    inventoryStatus: 'INSTOCK'
-                },
-                {
-                    label: 'Products',
-                    icon: 'pi pi-list',
-                    inventoryStatus: 'INSTOCK'
-                }
-            ]
-        },
-        {
-            label: 'Profile',
-            icon: 'pi pi-user',
-            inventoryStatus: 'INSTOCK',
-            items: [
-                {
-                    label: 'Settings',
-                    icon: 'pi pi-cog',
-                    inventoryStatus: 'INSTOCK',
-                },
-                {
-                    label: 'Privacy',
-                    icon: 'pi pi-shield',
-                    inventoryStatus: 'INSTOCK',
-                }
-            ]
-        }
-    ];
+    panelMenuItems: any[] = []
+    
 
-    loadDemoData() {
+
+    loadData() {
         const token = localStorage.getItem('access_token')
-        this.backend.getProducts(token!).subscribe({
+        this.backend.getTodos(token!).subscribe({
             next: (value: any) => {
-                this.products.set(value['todo_counts'])
+                this.products.set(value['todos'])
                 console.log(this.products)
                 this.loading = false
+                this.isMobileDevice() ? this.mobilePanelMenuMapper() : ''
                 this.products().forEach((element)=>{
                     element.due_date = new Date(element.due_date as unknown as string);
                     element.created_at = new Date(element.created_at as unknown as string);
                 })
             }
         });
+
+        
+            
+        
 
 
         this.cols = [
@@ -415,6 +455,37 @@ export class Crud implements OnInit {
         this.product = { ...product };
         this.productDialog = true;
     }
+
+     toTitleCase(str:any) {
+        return str
+          .toLowerCase()              // Convert entire string to lowercase first
+          .split(' ')                 // Split into array of words
+          .map((word: string) =>                // Capitalize first letter of each word
+            word.charAt(0).toUpperCase() + word.slice(1)
+          )
+          .join(' ');                 // Join words back with spaces
+      }
+
+      mobilePanelMenuMapper() {
+        this.dict = []; // Clear the existing items
+        this.products().forEach((element) => {
+            let innerChildrens: any[] = [];
+            Object.entries(element).forEach(([key, value]) => {
+                if (key != 'id' && key != 'username' && key != 'is_deleted') {
+                    innerChildrens.push({ label: `${this.toTitleCase(key)}:`, value: value });
+                }
+            });
+            this.dict.push({
+                label: element.title,
+                icon: 'pi pi-angle-right',
+                bg: element.status === 'Completed' ? '#4DDF82' : element.status === 'Missing' ? '#F87171' : '#FB923C',
+                items: innerChildrens
+            });
+        });
+        this.panelMenuItems = [...this.dict]; // Create a new reference
+        this.cdr.detectChanges();
+    }
+    
 
     deleteSelectedProducts() {
         // this.confirmationService.confirm({

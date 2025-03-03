@@ -93,7 +93,7 @@ export class BackendService {
         );
     }
 
-    getProducts(token_string: string) {
+    getTodos(token_string: string) {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -103,7 +103,26 @@ export class BackendService {
         let token_entry = {
             token: token_string
         };
-        return this.http.post(this.apiUrl + '/get_products', JSON.stringify(token_entry), httpOptions).pipe(
+        return this.http.post(this.apiUrl + '/get_todos', JSON.stringify(token_entry), httpOptions).pipe(
+            map((response: any) => {
+                this.response = response;
+                return this.response;
+            })
+        );
+    }
+
+    getTodosFilteredByStatus(token_string: string,status: string) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        let token_entry = {
+            token: token_string,
+            status: status
+        };
+        return this.http.post(this.apiUrl + '/get_todos_filter_status', JSON.stringify(token_entry), httpOptions).pipe(
             map((response: any) => {
                 this.response = response;
                 return this.response;
