@@ -92,4 +92,22 @@ export class BackendService {
             })
         );
     }
+
+    getProducts(token_string: string) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        let token_entry = {
+            token: token_string
+        };
+        return this.http.post(this.apiUrl + '/get_products', JSON.stringify(token_entry), httpOptions).pipe(
+            map((response: any) => {
+                this.response = response;
+                return this.response;
+            })
+        );
+    }
 }

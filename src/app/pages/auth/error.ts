@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { AppConfigurator } from '../../layout/component/app.configurator';
 import { AppTopbar } from '../../layout/component/app.topbar';
 
 @Component({
     selector: 'app-error',
-    imports: [ButtonModule, AppTopbar, RippleModule, RouterModule, AppFloatingConfigurator, ButtonModule],
+    imports: [ButtonModule, AppTopbar, RippleModule, RouterModule, AppConfigurator, ButtonModule],
     standalone: true,
-    template: ` <app-floating-configurator />
+    template: ` <app-configurator />
         <app-topbar></app-topbar>
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
             <div class="flex flex-col items-center justify-center">

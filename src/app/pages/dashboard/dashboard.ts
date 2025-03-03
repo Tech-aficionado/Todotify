@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import { NotificationsWidget } from './components/notificationswidget';
 import { StatsWidget } from './components/statswidget';
-import { RecentSalesWidget } from './components/recentsaleswidget';
-import { BestSellingWidget } from './components/bestsellingwidget';
-import { RevenueStreamWidget } from './components/revenuestreamwidget';
 import { Crud } from '../crud/crud';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -17,7 +13,7 @@ import { MessageService } from 'primeng/api';
         <div class="grid grid-cols-12 gap-8">
             <app-stats-widget class="contents" />
         </div>
-        <div class="pt-4">
+        <div>
             <app-crud></app-crud>
         </div>
     `
