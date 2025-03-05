@@ -31,6 +31,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { AvatarModule } from 'primeng/avatar';
 import { Popover, PopoverModule } from 'primeng/popover';
+import { MessageModule } from 'primeng/message';
 
 interface Column {
     field: string;
@@ -66,6 +67,7 @@ interface ExportColumn {
         InputNumberModule,
         DialogModule,
         TagModule,
+        MessageModule,
         BadgeModule,
         MultiSelectModule ,
         ListboxModule ,
@@ -77,18 +79,22 @@ interface ExportColumn {
     ],
     template: `
         <p-toolbar styleClass="mb-2">
-            <ng-template #start>
+            <ng-template #end>
                 <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
                 <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
             </ng-template>
 
-            <ng-template *ngIf="!isMobileDevice()" #end>
+            <ng-template *ngIf="!isMobileDevice()" #start>
                 <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
             </ng-template> 
-            <ng-template *ngIf="isMobileDevice()" #end>
+            <ng-template *ngIf="isMobileDevice()" #start>
                 <p-button type="button" icon="pi pi-filter" (onClick)="toggle($event)" />
             </ng-template>
-            <p-popover #op>
+            
+            
+
+        </p-toolbar>
+        <p-popover #op>
         <div class="flex flex-col gap-4">
             <div>
                 <span class="font-medium block mb-2">Select Status</span>
@@ -102,14 +108,13 @@ interface ExportColumn {
             </div>
         </div>
     </p-popover>
-            
-
-        </p-toolbar>
-
+    
+    <p-message *ngIf="loading" severity="info" icon="pi pi-spin pi-cog" text="Loading the todos" styleClass="mt-2 mb-2 h-full w-full" />
+        <p-message *ngIf="!loading && (filterStatus != 'None' && filterStatus != null)" severity="info" icon="pi pi-spin pi-cog" [text]="'Filter Applied: '+filterStatus" styleClass="mt-2 mb-2 h-full w-full" />
         <p-table
             #dt
             [value]="products()"
-            *ngIf="!isMobileDevice()"
+            *ngIf="!isMobileDevice() && !loading"
             stripedRows
             [rows]="10"
             [columns]="cols"
@@ -207,7 +212,7 @@ interface ExportColumn {
         </p-table>
 
         <p-panelmenu 
-  *ngIf="isMobileDevice()" 
+  *ngIf="isMobileDevice() && !loading" 
   styleClass="w-full md:w-80" 
   [model]="panelMenuItems">
   <ng-template #item let-item>
@@ -323,13 +328,15 @@ export class Crud implements OnInit {
     statuses: priority[] = [
         { label: 'High', value: 'High' },
         { label: 'Medium', value: 'Medium' },
-        { label: 'Low', value: 'Low' }
+        { label: 'Low', value: 'Low' },
+        {label: 'None', value: 'None'}
     ];
 
     Statuses: priority[] = [
         { label: 'Missing', value: 'Missing' },
         { label: 'Completed', value: 'Completed' },
-        { label: 'Pending', value: 'Pending' }
+        { label: 'Pending', value: 'Pending' },
+        {label: 'None', value: 'None'}
     ];
 
 
@@ -350,7 +357,7 @@ export class Crud implements OnInit {
     exportColumns!: ExportColumn[];
 
     cols!: Column[];
-    filterStatus!: string
+    filterStatus: string = 'None'
     dict:any[] = [];
 
     constructor(
