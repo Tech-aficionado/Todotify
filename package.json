@@ -6,6 +6,7 @@
         "ng": "ng",
         "start": "ng serve",
         "deploy": "ng build --configuration production && firebase deploy",
+        "android": "ng build --configuration production && npx cap sync android",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "format": "prettier --write \"**/*.{js,mjs,ts,mts,d.ts,html}\" --cache",
