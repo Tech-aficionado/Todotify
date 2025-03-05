@@ -6,6 +6,7 @@
 /.firebase
 /out-tsc
 /bazel-out
+/android
 
 # Node
 /node_modules
