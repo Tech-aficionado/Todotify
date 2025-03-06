@@ -12,15 +12,13 @@ export interface Product {
     title?: string;
     description?: string;
     status?: string;
+    category?: string;
     priority?: string;
     due_date?: Date;
     created_at?: Date;
     updated_at?: Date;
-    is_deleted? : number;
+    is_deleted?: number;
 }
 
 @Injectable()
-export class ProductService {
-    
-
-}
+export class ProductService {}

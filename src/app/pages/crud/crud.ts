@@ -1,3 +1,4 @@
+import { Command } from './../../../../node_modules/@capacitor/cli/node_modules/commander/typings/index.d';
 import { style } from '@angular/animations';
 import { ChangeDetectorRef, Component, OnInit, signal, ViewChild } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -32,6 +33,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { AvatarModule } from 'primeng/avatar';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { MessageModule } from 'primeng/message';
+import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 
 interface Column {
     field: string;
@@ -51,11 +53,12 @@ interface ExportColumn {
         CommonModule,
         TableModule,
         FormsModule,
-        DatePickerModule ,
+        DatePickerModule,
         ButtonModule,
         RippleModule,
         ToastModule,
-        FloatLabelModule ,
+        ContextMenuModule,
+        FloatLabelModule,
         ToolbarModule,
         RatingModule,
         InputTextModule,
@@ -69,11 +72,11 @@ interface ExportColumn {
         TagModule,
         MessageModule,
         BadgeModule,
-        MultiSelectModule ,
-        ListboxModule ,
+        MultiSelectModule,
+        ListboxModule,
         InputIconModule,
         OverlayBadgeModule,
-        AvatarModule ,
+        AvatarModule,
         IconFieldModule,
         ConfirmDialogModule
     ],
@@ -86,31 +89,28 @@ interface ExportColumn {
 
             <ng-template *ngIf="!isMobileDevice()" #start>
                 <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
-            </ng-template> 
+            </ng-template>
             <ng-template *ngIf="isMobileDevice()" #start>
                 <p-button type="button" icon="pi pi-filter" (onClick)="toggle($event)" />
             </ng-template>
-            
-            
-
         </p-toolbar>
         <p-popover #op>
-        <div class="flex flex-col gap-4">
-            <div>
-                <span class="font-medium block mb-2">Select Status</span>
-                <ul class="list-none p-0 m-0 flex flex-col">
-                    <li *ngFor="let member of Statuses" class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border" (click)="selectMember(member.value)">
-                        <div>
-                            <span class="bg-black p-2 font-medium" style="border-radius: 10%">{{ member.label }}</span>
-                        </div>
-                    </li>
-                </ul>
+            <div class="flex flex-col gap-4">
+                <div>
+                    <span class="font-medium block mb-2">Select Status</span>
+                    <ul class="list-none p-0 m-0 flex flex-col">
+                        <li *ngFor="let member of Statuses" class="flex items-center gap-2 px-2 py-3 hover:bg-emphasis cursor-pointer rounded-border" (click)="selectMember(member.value)">
+                            <div>
+                                <span class="bg-black p-2 font-medium" style="border-radius: 10%">{{ member.label }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </p-popover>
-    
-    <p-message *ngIf="loading" severity="info" icon="pi pi-spin pi-cog" text="Loading the todos" styleClass="mt-2 mb-2 h-full w-full" />
-        <p-message *ngIf="!loading && (filterStatus != 'None' && filterStatus != null)" severity="info" icon="pi pi-spin pi-cog" [text]="'Filter Applied: '+filterStatus" styleClass="mt-2 mb-2 h-full w-full" />
+        </p-popover>
+
+        <p-message *ngIf="loading" severity="info" icon="pi pi-spin pi-cog" text="Loading the todos" styleClass="mt-2 mb-2 h-full w-full" />
+        <p-message *ngIf="!loading && filterStatus != 'None' && filterStatus != null" severity="info" icon="pi pi-spin pi-cog" [text]="'Filter Applied: ' + filterStatus" styleClass="mt-2 mb-2 h-full w-full" />
         <p-table
             #dt
             [value]="products()"
@@ -143,35 +143,35 @@ interface ExportColumn {
                     <th style="width: 3rem">
                         <p-tableHeaderCheckbox />
                     </th>
-                    <th style="min-width: 1rem">Id</th>
                     <th pSortableColumn="name" style="min-width:17rem">
                         Name
                         <p-sortIcon field="title" />
                     </th>
-                    <th style="min-width:23rem">Description</th>
+                    <th style="min-width:18rem">Description</th>
+                    <th pSortableColumn="category" style="min-width: 9rem">
+                        Category
+                        <p-sortIcon field="category" />
+                    </th>
                     <th pSortableColumn="status" style="min-width:8rem">
                         Status
-                        <p-columnFilter field="status" matchMode="in"  display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                        <ng-template #header>
-                            <div class="px-4 pt-4 pb-0">
-                                <span class="font-bold">Statuses</span>
-                            </div>
-                        </ng-template>
-                        <ng-template #filter let-value let-filter="filterCallback">
-                            <p-select [(ngModel)]="filterStatus"  [showClear]="true" [options]="Statuses" placeholder="Any" (onChange)="filterByStatus()" optionLabel="label" optionValue="value" >
-                                <ng-template let-option #item>
-                                    <div class="inline-block align-middle">
-                                        <span class="ml-1 mt-1">{{ option.label }}</span>
-                                    </div>
-                                </ng-template>
-                            </p-select>
-                        </ng-template>
-                    </p-columnFilter>
+                        <p-columnFilter field="status" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                            <ng-template #header>
+                                <div class="px-4 pt-4 pb-0">
+                                    <span class="font-bold">Statuses</span>
+                                </div>
+                            </ng-template>
+                            <ng-template #filter let-value let-filter="filterCallback">
+                                <p-select [(ngModel)]="filterStatus" [showClear]="true" [options]="Statuses" placeholder="Any" (onChange)="filterByStatus()" optionLabel="label" optionValue="value">
+                                    <ng-template let-option #item>
+                                        <div class="inline-block align-middle">
+                                            <span class="ml-1 mt-1">{{ option.label }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-select>
+                            </ng-template>
+                        </p-columnFilter>
                     </th>
-                    <th  style="min-width: 9rem">
-                        Priority
-                        
-                    </th>
+                    <th style="min-width: 9rem">Priority</th>
                     <th pSortableColumn="inventoryStatus" style="min-width: 12rem">
                         Created at
                         <p-sortIcon field="inventoryStatus" />
@@ -188,10 +188,12 @@ interface ExportColumn {
                     <td style="width: 3rem">
                         <p-tableCheckbox [value]="product" />
                     </td>
-                    <td style="min-width: 1rem">{{ product.id }}</td>
                     <td style="min-width: 4rem">{{ product.title }}</td>
-                    <td style="min-width: 20rem">
-                    {{ product.description }}
+                    <td style="min-width: 18rem">
+                        {{ product.description }}
+                    </td>
+                    <td style="min-width: 9rem">
+                        {{ product.category }}
                     </td>
                     <td>
                         <p-tag [value]="product.status" [severity]="getSeverity(product.status)" />
@@ -201,7 +203,7 @@ interface ExportColumn {
                     </td>
                     <td>{{ product.created_at }}</td>
                     <td>
-                    {{ product.due_date }}
+                        {{ product.due_date }}
                     </td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editProduct(product)" />
@@ -211,59 +213,30 @@ interface ExportColumn {
             </ng-template>
         </p-table>
 
-        <p-panelmenu 
-  *ngIf="isMobileDevice() && !loading" 
-  styleClass="w-full md:w-80" 
-  [model]="panelMenuItems">
-  <ng-template #item let-item>
-    <a 
-      pRipple 
-      class="flex items-center px-4 py-2 cursor-pointer group justify-between w-full"
-      [ngClass]="{'bg-hover': !item.expanded}"
-    >
-      <div class="flex w-full items-center justify-between">
-        <!-- Left Section: Icon and Label -->
-        <div class="flex items-center flex-grow">
-          <i [class]="item.icon + ' text-primary group-hover:text-inherit mr-2'"></i>
-          <span class="ml-1 truncate">{{ item.label }}</span>
-        </div>
+        <p-panelmenu #mobilePanel *ngIf="isMobileDevice() && !loading" styleClass="w-full md:w-80" [model]="panelMenuItems">
+            <ng-template #item let-item>
+                <a pRipple class="flex items-center px-4 py-2 cursor-pointer group justify-between w-full" [ngClass]="{ 'bg-hover': !item.expanded }">
+                    <div class="flex w-full items-center justify-between">
+                        <!-- Left Section: Icon and Label -->
+                        <div class="flex items-center flex-grow">
+                            <i [class]="item.icon + ' text-primary group-hover:text-inherit mr-2'"></i>
+                            <span class="ml-1 truncate">{{ item.label }}</span>
+                        </div>
 
-        <!-- Right Section: Status Tag, Buttons, and Avatar -->
-        <div class="flex items-center gap-2">
-          <p-tag 
-            [value]="item.value" 
-            *ngIf="item.value" 
-            [severity]="getSeverity(item.value)" 
-            [ngStyle]="{'max-width': '150px'}"
-          />
-          <p-button 
-            *ngIf="item.edit" 
-            icon="pi pi-pencil" 
-            class="p-button-rounded p-button-outlined" 
-            (click)="editProduct(item)"
-          />
-          <p-button 
-            *ngIf="item.delete" 
-            icon="pi pi-trash" 
-            severity="danger" 
-            class="p-button-rounded p-button-outlined" 
-            (click)="console(item)"
-          />
-          <p-avatar 
-            *ngIf="item.bg" 
-            size="normal" 
-            shape="circle" 
-            [style]="{'background-color': item.bg}"
-          />
-        </div>
-      </div>
-    </a>
-  </ng-template>
-</p-panelmenu>
-        <p-dialog stripedRows  [(visible)]="productDialog" [style]="{ 'width ': '550px','height': '500px' }" header="Product Details ( Real Time Update)" [modal]="true">
+                        <!-- Right Section: Status Tag, Buttons, and Avatar -->
+                        <div class="flex items-center gap-2">
+                            <p-tag [value]="item.value" *ngIf="item.value" [severity]="getSeverity(item.value)" [ngStyle]="{ 'max-width': '150px' }" />
+                            <p-button *ngIf="item.edit" icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="editProduct(item)" />
+                            <p-button *ngIf="item.delete" icon="pi pi-trash" severity="danger" class="p-button-rounded p-button-outlined" (click)="console(item)" />
+                            <p-avatar *ngIf="item.bg" size="normal" shape="circle" [style]="{ 'background-color': item.bg }" />
+                        </div>
+                    </div>
+                </a>
+            </ng-template>
+        </p-panelmenu>
+        <p-dialog stripedRows [(visible)]="productDialog" [style]="{ 'width ': '550px', height: '450px' }" [header]="isMobileDevice() ? 'Manage Todo' : 'Manage Todo (Real Time Update)'" [modal]="true">
             <ng-template #content>
                 <div class="flex flex-col gap-6 mt-3">
-                    
                     <div>
                         <p-floatlabel variant="on">
                             <input type="text" pInputText id="title" [(ngModel)]="product.title" autocomplete="off" required autofocus fluid />
@@ -273,32 +246,31 @@ interface ExportColumn {
                     </div>
                     <div>
                         <p-floatlabel variant="on">
-                            <textarea  pTextarea id="description" rows="3"  cols="20" [(ngModel)]="product.description" autocomplete="off" autofocus fluid ></textarea>
+                            <textarea pTextarea id="description" rows="3" cols="20" [(ngModel)]="product.description" autocomplete="off" autofocus fluid></textarea>
                             <label for="description">Description</label>
                         </p-floatlabel>
                     </div>
 
                     <div>
-    <p-floatlabel variant="on">
-                            <p-select  [(ngModel)]="product.priority" 
-        inputId="priority" 
-        [options]="statuses" 
-        optionLabel="label" 
-        optionValue="value" 
-        placeholder="Select a Priority" 
-        fluid />
+                        <p-floatlabel variant="on">
+                            <p-select [(ngModel)]="product.priority" inputId="priority" [options]="statuses" optionLabel="label" optionValue="value" appendTo="body" fluid />
                             <label for="priority">Priority</label>
-                        </p-floatlabel></div>
+                        </p-floatlabel>
+                    </div>
 
-                    
+                    <div>
+                        <p-floatlabel variant="on">
+                            <p-select [(ngModel)]="product.category" inputId="category" [options]="categories" optionLabel="label" optionValue="value" appendTo="body" fluid />
+                            <label for="category">Category</label>
+                        </p-floatlabel>
+                    </div>
 
-                        <div>
-                            <p-floatlabel variant="on">
-    <p-datepicker [(ngModel)]="product.due_date" inputId="due_date" showIcon iconDisplay="input" fluid [showTime]="true" [hourFormat]="'24'" />
-    <label for="due_date">Due Date</label>
-</p-floatlabel>
-                        </div>
-                   
+                    <div>
+                        <p-floatlabel variant="on">
+                            <p-datepicker [(ngModel)]="product.due_date" appendTo="body" inputId="due_date" (onSelect)="console($event)" showIcon iconDisplay="input" fluid [showTime]="true" [hourFormat]="'24'" />
+                            <label for="due_date">Due Date</label>
+                        </p-floatlabel>
+                    </div>
                 </div>
             </ng-template>
 
@@ -311,7 +283,7 @@ interface ExportColumn {
         <p-confirmdialog [style]="{ width: '450px' }" />
         <p-toast />
     `,
-    providers: [MessageService,BackendService, ProductService, ConfirmationService]
+    providers: [MessageService, BackendService, ProductService, ConfirmationService]
 })
 export class Crud implements OnInit {
     productDialog: boolean = false;
@@ -319,7 +291,7 @@ export class Crud implements OnInit {
     products = signal<Product[]>([]);
 
     product!: Product;
-    loading: boolean = false
+    loading: boolean = false;
 
     selectedProducts!: Product[] | null;
 
@@ -329,20 +301,34 @@ export class Crud implements OnInit {
         { label: 'High', value: 'High' },
         { label: 'Medium', value: 'Medium' },
         { label: 'Low', value: 'Low' },
-        {label: 'None', value: 'None'}
+        { label: 'None', value: 'None' }
     ];
 
     Statuses: priority[] = [
         { label: 'Missing', value: 'Missing' },
         { label: 'Completed', value: 'Completed' },
         { label: 'Pending', value: 'Pending' },
-        {label: 'None', value: 'None'}
+        { label: 'None', value: 'None' }
+    ];
+    categories: priority[] = [
+        { label: 'Work', value: 'Work' },
+        { label: 'Personal', value: 'Personal' },
+        { label: 'Home', value: 'Home' },
+        { label: 'Errands', value: 'Errands' },
+        { label: 'Long Term Goals', value: 'Long Term Goals' },
+        { label: 'Health', value: 'Health' },
+        { label: 'Social', value: 'Social' },
+        { label: 'Finance', value: 'Finance' },
+        { label: 'Learning', value: 'Learning' },
+        { label: 'Creative', value: 'Creative' },
+        { label: 'Others', value: 'Others' }
     ];
 
-
+    items: any[] = [];
 
     @ViewChild('dt') dt!: Table;
     @ViewChild('op') op!: Popover;
+    @ViewChild('cm') cm!: ContextMenu;
 
     toggle(event: any) {
         this.op.toggle(event);
@@ -357,15 +343,15 @@ export class Crud implements OnInit {
     exportColumns!: ExportColumn[];
 
     cols!: Column[];
-    filterStatus: string = 'None'
-    dict:any[] = [];
+    filterStatus: string = 'None';
+    dict: any[] = [];
 
     constructor(
         private productService: ProductService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-                public backend: BackendService,
-                private cdr: ChangeDetectorRef
+        public backend: BackendService,
+        private cdr: ChangeDetectorRef
     ) {}
 
     exportCSV() {
@@ -373,67 +359,82 @@ export class Crud implements OnInit {
     }
     clear(table: Table) {
         table.clear();
-        this.filterStatus = ''
+        this.filterStatus = '';
     }
 
-
-    filterByStatus(){
-        this.loading = true
-        const token = localStorage.getItem('access_token')
-        this.backend.getTodosFilteredByStatus(token!,this.filterStatus).subscribe({
+    filterByStatus() {
+        this.loading = true;
+        const token = localStorage.getItem('access_token');
+        this.backend.getTodosFilteredByStatus(token!, this.filterStatus).subscribe({
             next: (value: any) => {
-                this.products.set(value['todos'])
-                console.log(this.products)
-                this.loading = false
-                this.isMobileDevice() ? this.mobilePanelMenuMapper() : ''
+                this.products.set(value['todos']);
+                console.log(this.products);
+                this.loading = false;
+                this.isMobileDevice() ? this.mobilePanelMenuMapper() : '';
                 this.cdr.detectChanges();
-        
-                this.products().forEach((element)=>{
+
+                this.products().forEach((element) => {
                     element.due_date = new Date(element.due_date as unknown as string);
                     element.created_at = new Date(element.created_at as unknown as string);
-                })
+                });
             }
         });
     }
-
-
 
     ngOnInit() {
-        this.loading = true
+        this.loading = true;
         this.loadData();
         window.addEventListener('resize', () => {
-            this.isMobileDevice()
+            this.isMobileDevice();
         });
+        this.items = [
+            {
+                label: 'Roles',
+                icon: 'pi pi-users',
+                items: [
+                    {
+                        label: 'Admin',
+                        command: (item: Product[] | null) => {
+                            this.selectedProducts = item;
+                            console.log(this.selectedProducts);
+                        }
+                    },
+                    {
+                        label: 'Member'
+                    },
+                    {
+                        label: 'Guest'
+                    }
+                ]
+            }
+        ];
     }
-    console(id: any){
-        this.messageService.add({
-            severity: 'info',
-            summary: JSON.stringify(id),
-        });
+    console(id: any) {
+        if (new Date() > new Date(id as unknown as string)) {
+            this.messageService.add({
+                severity: 'error',
+                detail: 'Selected Current Date Time',
+                summary: 'Due Date Should be greater'
+            });
+            this.product.due_date = new Date();
+        }
     }
-    panelMenuItems: any[] = []
-    
-
+    panelMenuItems: any[] = [];
 
     loadData() {
-        const token = localStorage.getItem('access_token')
+        const token = localStorage.getItem('access_token');
         this.backend.getTodos(token!).subscribe({
             next: (value: any) => {
-                this.products.set(value['todos'])
-                console.log(this.products)
-                this.loading = false
-                this.isMobileDevice() ? this.mobilePanelMenuMapper() : ''
-                this.products().forEach((element)=>{
+                this.products.set(value['todos']);
+                console.log(this.products);
+                this.loading = false;
+                this.isMobileDevice() ? this.mobilePanelMenuMapper() : '';
+                this.products().forEach((element) => {
                     element.due_date = new Date(element.due_date as unknown as string);
                     element.created_at = new Date(element.created_at as unknown as string);
-                })
+                });
             }
         });
-
-        
-            
-        
-
 
         this.cols = [
             { field: 'id', header: 'Id', customExportHeader: 'Todo Id' },
@@ -463,23 +464,31 @@ export class Crud implements OnInit {
         this.productDialog = true;
     }
 
-     toTitleCase(str:any) {
+    toTitleCase(str: any) {
         return str
-          .toLowerCase()              // Convert entire string to lowercase first
-          .split(' ')                 // Split into array of words
-          .map((word: string) =>                // Capitalize first letter of each word
-            word.charAt(0).toUpperCase() + word.slice(1)
-          )
-          .join(' ');                 // Join words back with spaces
-      }
+            .toLowerCase() // Convert entire string to lowercase first
+            .split(' ') // Split into array of words
+            .map(
+                (
+                    word: string // Capitalize first letter of each word
+                ) => word.charAt(0).toUpperCase() + word.slice(1)
+            )
+            .join(' '); // Join words back with spaces
+    }
 
-      mobilePanelMenuMapper() {
+    mobilePanelMenuMapper() {
         this.dict = []; // Clear the existing items
         this.products().forEach((element) => {
             let innerChildrens: any[] = [];
             Object.entries(element).forEach(([key, value]) => {
                 if (key != 'id' && key != 'username' && key != 'is_deleted') {
-                    innerChildrens.push({ label: `${this.toTitleCase(key)}:`, value: value });
+                    innerChildrens.push({
+                        label: `${this.toTitleCase(key)}:`,
+                        value: value,
+                        command: () => {
+                            this.editProduct(element);
+                        }
+                    });
                 }
             });
             this.dict.push({
@@ -492,7 +501,6 @@ export class Crud implements OnInit {
         this.panelMenuItems = [...this.dict]; // Create a new reference
         this.cdr.detectChanges();
     }
-    
 
     deleteSelectedProducts() {
         // this.confirmationService.confirm({
@@ -511,9 +519,9 @@ export class Crud implements OnInit {
         //     }
         // });
         this.messageService.add({
-                        severity: 'success',
-                        summary: JSON.stringify(this.selectedProducts)
-                    });
+            severity: 'success',
+            summary: JSON.stringify(this.selectedProducts)
+        });
     }
 
     hideDialog() {
@@ -538,8 +546,8 @@ export class Crud implements OnInit {
     //         }
     //     });
     // }
-    saveProduct(){
-        console.log(this.product)
+    saveProduct() {
+        console.log(this.product);
     }
 
     // findIndexById(id: string): number {
@@ -571,7 +579,7 @@ export class Crud implements OnInit {
                 return 'warn';
             case 'Missing':
                 return 'danger';
-                
+
             case 'High':
                 return 'success';
             case 'Medium':
@@ -618,12 +626,11 @@ export class Crud implements OnInit {
         const userAgent: string = navigator.userAgent.toLowerCase();
         const mobileKeywords: RegExp = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
         const isMobileUA: boolean = mobileKeywords.test(userAgent);
-    
+
         // Check screen width (common mobile threshold is 768px)
         const isMobileWidth: boolean = window.innerWidth <= 768;
-    
+
         // Return true if either user agent or screen width indicates mobile
         return isMobileUA || isMobileWidth;
     }
-    
 }

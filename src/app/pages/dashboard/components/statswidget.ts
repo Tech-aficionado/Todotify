@@ -97,23 +97,24 @@ export class StatsWidget implements OnInit {
                         summary: 'Unauthorised Access',
                         severity: 'error'
                     });
-                    localStorage.removeItem('access_token')
+                    localStorage.removeItem('access_token');
                     this.router.navigate(['auth/access']);
                 } else if (value['status_code'] == 200) {
                     this.set_counts(value['todo_counts']);
                 } else if (value['status_code'] == 401) {
                     this.loading = false;
-                    localStorage.removeItem('access_token')
+                    localStorage.removeItem('access_token');
                     this.messageService.add({
                         summary: 'Session Expired',
                         severity: 'error'
-                    });this.router.navigate(['auth/login']);
+                    });
+                    this.router.navigate(['auth/login']);
                 }
             }
         });
     }
-    alert(){
-        alert("lsvlndsv")
+    alert() {
+        alert('lsvlndsv');
     }
 
     set_counts(todos: any) {

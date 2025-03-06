@@ -92,7 +92,7 @@ import { ButtonModule } from 'primeng/button';
                     </button>
                     <button type="button" pTooltip="Linked Profile" tooltipPosition="bottom" class="layout-topbar-action">
                         <a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank"><i class="pi pi-linkedin"></i></a>
-                        <span ><a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank">LinkedIn</a></span>
+                        <span><a href="https://www.linkedin.com/in/shivansh-goel-5b2309174/" target="_blank">LinkedIn</a></span>
                     </button>
                     <button type="button" pTooltip="Projects" tooltipPosition="left" class="layout-topbar-action">
                         <a href="https://github.com/Tech-aficionado?tab=repositories" target="_blank"><i class="pi pi-bolt"></i></a>

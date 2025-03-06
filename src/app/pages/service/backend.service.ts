@@ -20,7 +20,7 @@ export class BackendService {
 
     response!: any[];
 
-    apiUrl = 'https://88k7cdg9-3000.inc1.devtunnels.ms';
+    apiUrl = 'http://localhost:3000';
 
     getUsers() {
         return this.http.get(this.apiUrl + '/users').pipe(
@@ -111,7 +111,7 @@ export class BackendService {
         );
     }
 
-    getTodosFilteredByStatus(token_string: string,status: string) {
+    getTodosFilteredByStatus(token_string: string, status: string) {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
